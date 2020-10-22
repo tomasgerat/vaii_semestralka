@@ -25,3 +25,29 @@ body {
     display: inline-block;
     font-size: 25px;
 }
+
+.button_icon {
+    border-radius: 6px;
+    display: inline;
+    color: white;
+    background-color: #343a40;
+}
+.button_icon:hover {
+    color: black;
+    background-color: white;
+    border-color: white;
+}
+.button_icon:active {
+    color: white;
+    background-color: #343a40;
+    border-color: black;
+}
+.all_topics {
+    margin-top: 20px;
+}
+.topic_frame {
+    margin-top: 20px;
+    background-color: #cce5ff;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px #95999c;
+}

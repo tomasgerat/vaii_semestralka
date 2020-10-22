@@ -1,0 +1,12 @@
+.votes {
+    display: block;
+    color: #5a6268;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    padding-right: 25px;
+    padding-left: 5px;
+}
+.my_container {
+    display: inline-block;
+    float: right;
+}
