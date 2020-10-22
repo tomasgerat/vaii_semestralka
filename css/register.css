@@ -1,0 +1,11 @@
+body {
+    background-color: #ebebeb;
+}
+.login_headline {
+    margin: 10px 0 0 0;
+    text-align: center;
+}
+.register_instructions {
+    text-align: center;
+    color: #5a6268;
+}

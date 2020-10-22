@@ -1,0 +1,44 @@
+body {
+    background-color: #ebebeb;
+}
+.headline {
+    margin: 10px 0 0 0;
+    text-align: center;
+}
+.instructions {
+    text-align: center;
+    color: #5a6268;
+}
+label {
+  font-weight: bold;
+}
+input[type=text], input[type=password] {
+    width: 100%; /*cely riadok*/
+    display: inline-block;
+    padding: 10px 15px; /*text v boxoch posunutie od okraja top, left*/
+    margin: 8px 0px; /*odsadenie elementu top,bottom  a left*/
+    border: 2px solid #0c5460;
+    box-sizing: border-box; /*vyska sirka elementu obsahuje aj padding*/
+    border-radius: 12px;
+}
+button[type=button] {
+    width: 100%; /*cely riadok*/
+    display: inline-block;
+    background-color: #7abaff;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 12px;
+    box-sizing: border-box; /*vyska sirka elementu obsahuje aj padding*/
+}
+.col_login_form {
+    padding-top: 0px;
+}
+.login_form {
+    background-color: #b9bbbe;
+    margin: 5% auto 15% auto; /* 5% from the top, 15% from the bottom and centered */
+    width: 100%; /* Could be more or less, depending on screen size */
+    max-width: 480px;
+    padding: 5%;
+    padding-bottom: min(20px, 5%);
+    padding-top: min(20px, 5%);
+}

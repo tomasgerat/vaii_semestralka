@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>F Home</title>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+            integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+            crossorigin="anonymous"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="fontawesome/css/all.css">
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/general.css">
+    <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+<div class="container">
+    <nav class="navbar navbar-expand-md navbar-light sticky-top custom_navbar">
+        <a class="navbar-brand" href="./main.html">
+            <img src="./img/F.png" width="20" height="30" alt="">
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav mt-2 mt-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link active" href="./main.html">
+                        <i class="fa fa-home"></i> Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">
+                        <i class="fa fa-clock"></i> Recent</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="./add.html">
+                        <i class="fa fa-plus-circle"></i> Add</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link " href="profile.html">
+                        <i class="fa fa-user"></i> Profile</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link " href="#">
+                        <i class="fa fa-sign-out-alt"></i> Sign out</a>
+                </li>
+            </ul>
+            <form class="form-inline ml-auto mt-2 my-lg-0">
+                <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                <button class="btn btn-dark btn-outline-light my-2 my-sm-0" type="submit">Search</button>
+            </form>
+        </div>
+    </nav>
+</div>
+<!-- **************************************************************** -->
+    <div class="container">
+        <div class="row">
+            <div class="d-none d-sm-block col-lg-8 col-md-8" id="top_navigation">
+                <div class="navigation">
+                    <div class="float-left">
+                        <a href="#" class="navigation_angle"><i class="fa fa-angle-left"></i></a>
+                    </div>
+                    <div class="float-left">
+                        <ul>
+                            <li class="navigation_page_num"><a href="#"><span class="badge badge-dark">1</span></a>
+                            </li>
+                            <li class="navigation_page_num"><a href="#"><span class="badge badge-dark">2</span></a>
+                            </li>
+                            <li class="navigation_page_num"><a href="#"><span class="badge badge-dark">3</span></a>
+                            </li>
+                            <li class="navigation_page_num"><a href="#"><span class="badge badge-dark">4</span></a>
+                            </li>
+                            <li class="navigation_page_num"><a href="#"><span class="badge badge-dark">5</span></a>
+                            </li>
+                            <li class="navigation_page_num"><a href="#"><span
+                                    class="badge badge-dark">...</span></a></li>
+                            <li class="navigation_page_num"><a href="#"><span class="badge badge-dark">10000</span></a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="float-left"><a href="#" class="navigation_angle">
+                        <i class="fa fa-angle-right"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-8 col-md-8" id="topics_place">
+                <!--Generovat podla databazy-->
+                <div class="container topic_frame">
+                    <div class="row">
+                        <div class="container col-sm-10 col-12">
+                            <div class="row ">
+                                <div class="col-sm-3 col-12 topic_info">
+                                    <div class="bold topic_category">topic kategory</div>
+                                    <div class="topic_author">autor name</div>
+                                </div>
+                                <div class="col-sm-9 col-12 topic_text">
+                                    <h3>
+                                        <a class="topic_headline" href="#topic01.html">Name of the topic is going
+                                            here.</a>
+                                    </h3>
+                                    <p>
+                                        This is the text of topic. Probably not whole text,
+                                        only few word from begginnig of topic. Or one paragraph?
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-2 col-12 stats topic_stats">
+                            <div class="stats topic_comments">
+                                <i class="fa fa-comment"></i>
+                                2365
+                            </div>
+                            <div class="stats topic_views">
+                                <i class="fa fa-eye"></i>
+                                2365
+                            </div>
+                            <div class="stats topic_time">
+                                <i class="fa fa-clock"></i>
+                                10 min
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="container topic_frame">
+                    <div class="row">
+                        <div class="container col-sm-10 col-12">
+                            <div class="row ">
+                                <div class="col-sm-3 col-12 topic_info">
+                                    <div class="bold topic_category">topic kategory</div>
+                                    <div class="topic_author">autor name</div>
+                                </div>
+                                <div class="col-sm-9 col-12 topic_text">
+                                    <h3>
+                                        <a class="topic_headline" href="#topic01.html">Name of the topic is going
+                                            here.</a>
+                                    </h3>
+                                    <p>
+                                        This is the text of topic. Probably not whole text,
+                                        only few word from begginnig of topic. Or one paragraph?
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-2 col-12 stats topic_stats">
+                            <div class="stats topic_comments">
+                                <i class="fa fa-comment"></i>
+                                2365
+                            </div>
+                            <div class="stats topic_views">
+                                <i class="fa fa-eye"></i>
+                                2365
+                            </div>
+                            <div class="stats topic_time">
+                                <i class="fa fa-clock"></i>
+                                10 min
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="container topic_frame">
+                    <div class="row">
+                        <div class="container col-sm-10 col-12">
+                            <div class="row ">
+                                <div class="col-sm-3 col-12 topic_info">
+                                    <div class="bold topic_category">topic kategory</div>
+                                    <div class="topic_author">autor name</div>
+                                </div>
+                                <div class="col-sm-9 col-12 topic_text">
+                                    <h3>
+                                        <a class="topic_headline" href="#topic01.html">Name of the topic is going
+                                            here.</a>
+                                    </h3>
+                                    <p>
+                                        This is the text of topic. Probably not whole text,
+                                        only few word from begginnig of topic. Or one paragraph?
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-2 col-12 stats topic_stats">
+                            <div class="stats topic_comments">
+                                <i class="fa fa-comment"></i>
+                                2365
+                            </div>
+                            <div class="stats topic_views">
+                                <i class="fa fa-eye"></i>
+                                2365
+                            </div>
+                            <div class="stats topic_time">
+                                <i class="fa fa-clock"></i>
+                                10 min
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="container topic_frame">
+                    <div class="row">
+                        <div class="container col-sm-10 col-12">
+                            <div class="row ">
+                                <div class="col-sm-3 col-12 topic_info">
+                                    <div class="bold topic_category">topic kategory</div>
+                                    <div class="topic_author">autor name</div>
+                                </div>
+                                <div class="col-sm-9 col-12 topic_text">
+                                    <h3>
+                                        <a class="topic_headline" href="#topic01.html">Name of the topic is going
+                                            here.</a>
+                                    </h3>
+                                    <p>
+                                        This is the text of topic. Probably not whole text,
+                                        only few word from begginnig of topic. Or one paragraph?
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-2 col-12 stats topic_stats">
+                            <div class="stats topic_comments">
+                                <i class="fa fa-comment"></i>
+                                2365
+                            </div>
+                            <div class="stats topic_views">
+                                <i class="fa fa-eye"></i>
+                                2365
+                            </div>
+                            <div class="stats topic_time">
+                                <i class="fa fa-clock"></i>
+                                10 min
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="container topic_frame">
+                    <div class="row">
+                        <div class="container col-sm-10 col-12">
+                            <div class="row ">
+                                <div class="col-sm-3 col-12 topic_info">
+                                    <div class="bold topic_category">topic kategory</div>
+                                    <div class="topic_author">autor name</div>
+                                </div>
+                                <div class="col-sm-9 col-12 topic_text">
+                                    <h3>
+                                        <a class="topic_headline" href="#topic01.html">Name of the topic is going
+                                            here.</a>
+                                    </h3>
+                                    <p>
+                                        This is the text of topic. Probably not whole text,
+                                        only few word from begginnig of topic. Or one paragraph?
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-2 col-12 stats topic_stats">
+                            <div class="stats topic_comments">
+                                <i class="fa fa-comment"></i>
+                                2365
+                            </div>
+                            <div class="stats topic_views">
+                                <i class="fa fa-eye"></i>
+                                2365
+                            </div>
+                            <div class="stats topic_time">
+                                <i class="fa fa-clock"></i>
+                                10 min
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="container topic_frame">
+                    <div class="row">
+                        <div class="container col-sm-10 col-12">
+                            <div class="row ">
+                                <div class="col-sm-3 col-12 topic_info">
+                                    <div class="bold topic_category">topic kategory</div>
+                                    <div class="topic_author">autor name</div>
+                                </div>
+                                <div class="col-sm-9 col-12 topic_text">
+                                    <h3>
+                                        <a class="topic_headline" href="#topic01.html">Name of the topic is going
+                                            here.</a>
+                                    </h3>
+                                    <p>
+                                        This is the text of topic. Probably not whole text,
+                                        only few word from begginnig of topic. Or one paragraph?
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-2 col-12 stats topic_stats">
+                            <div class="stats topic_comments">
+                                <i class="fa fa-comment"></i>
+                                2365
+                            </div>
+                            <div class="stats topic_views">
+                                <i class="fa fa-eye"></i>
+                                2365
+                            </div>
+                            <div class="stats topic_time">
+                                <i class="fa fa-clock"></i>
+                                10 min
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-4">
+                <div class="stats_block ">
+                    <h3>Categories</h3>
+                    <div class="line"></div>
+                    <ul class="categories_list" id="stats_place">
+                        <!-- Generovat podla databazy-->
+                        <li><a href="#">Computers <span class="badge badge-secondary float-right">10</span></a></li>
+                        <li><a href="#">Games <span class="badge badge-secondary float-right">20</span></a></li>
+                        <li><a href="#">Science <span class="badge badge-secondary float-right">30</span></a></li>
+                        <li><a href="#">Movies <span class="badge badge-secondary float-right">45</span></a></li>
+                        <li><a href="#">Music <span class="badge badge-secondary float-right">12</span></a></li>
+                        <li><a href="#">Other <span class="badge badge-secondary float-right">15</span></a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-8 col-md-8" id="bottom_navigation">
+                <div class="navigation">
+                    <div class="float-left">
+                        <a href="#" class="navigation_angle"><i class="fa fa-angle-left"></i></a>
+                    </div>
+                    <div class="float-left">
+                        <ul>
+                            <li class="navigation_page_num"><a href="#"><span class="badge badge-dark">1</span></a>
+                            </li>
+                            <li class="navigation_page_num"><a href="#"><span class="badge badge-dark">2</span></a>
+                            </li>
+                            <li class="navigation_page_num"><a href="#"><span class="badge badge-dark">3</span></a>
+                            </li>
+                            <li class="navigation_page_num"><a href="#"><span class="badge badge-dark">4</span></a>
+                            </li>
+                            <li class="navigation_page_num"><a href="#"><span class="badge badge-dark">5</span></a>
+                            </li>
+                            <li class="navigation_page_num"><a href="#"><span
+                                    class="badge badge-dark">...</span></a></li>
+                            <li class="navigation_page_num"><a href="#"><span class="badge badge-dark">10000</span></a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="float-left"><a href="#" class="navigation_angle">
+                        <i class="fa fa-angle-right"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
