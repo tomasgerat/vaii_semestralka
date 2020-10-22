@@ -101,21 +101,3 @@
     color :black;
 }
 
-.navigation {
-    margin-top: 20px;
-    display: inline-flex;
-}
-
-.navigation ul {
-}
-.navigation_angle {
-    margin: 0;
-    padding-right: 0px;
-    display: inline-block;
-    font-size: 25px;
-}
-.navigation_page_num {
-    padding-right: 10px;
-    display: inline-block;
-    font-size: 25px;
-}
