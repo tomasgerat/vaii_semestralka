@@ -12,11 +12,9 @@ body {
     display: inline-flex;
 }
 
-.navigation ul {
-}
 .navigation_angle {
     margin: 0;
-    padding-right: 0px;
+    padding-right: 0;
     display: inline-block;
     font-size: 25px;
 }
@@ -42,12 +40,14 @@ body {
     background-color: #343a40;
     border-color: black;
 }
-.all_topics {
-    margin-top: 20px;
-}
+
 .topic_frame {
     margin-top: 20px;
     background-color: #cce5ff;
     border-radius: 10px;
     box-shadow: 0 4px 10px #95999c;
+}
+
+.bold {
+    font-weight: bold;
 }

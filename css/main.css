@@ -1,18 +1,8 @@
-
-.topic_content {
-    display: contents;
-    float: left;
-    margin-left: 20px;
-}
 .topic_info {
     padding-top: 10px;
     padding-right: 2px;
     padding-bottom: 10px;
     padding-left: 5px;
-}
-
-.bold {
-    font-weight: bold;
 }
 
 .topic_author {
@@ -74,14 +64,14 @@
 }
 
 .categories_list {
-    margin: 0px;
-    padding: 0px;
+    margin: 0;
+    padding: 0;
 }
 .categories_list li {
     font-size: 20px;
     display: block;
-    margin: 0px;
-    padding: 0px;
+    margin: 0;
+    padding: 0;
     line-height: 30px;
     list-style: none;
 }
