@@ -16,7 +16,7 @@ input[type=text], input[type=password] {
     width: 100%; /*cely riadok*/
     display: inline-block;
     padding: 10px 15px; /*text v boxoch posunutie od okraja top, left*/
-    margin: 8px 0px; /*odsadenie elementu top,bottom  a left*/
+    margin: 8px 0; /*odsadenie elementu top,bottom  a left*/
     border: 2px solid #0c5460;
     box-sizing: border-box; /*vyska sirka elementu obsahuje aj padding*/
     border-radius: 12px;
@@ -31,7 +31,7 @@ button[type=button] {
     box-sizing: border-box; /*vyska sirka elementu obsahuje aj padding*/
 }
 .col_login_form {
-    padding-top: 0px;
+    padding-top: 0;
 }
 .login_form {
     background-color: #b9bbbe;
