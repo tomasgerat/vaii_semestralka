@@ -113,10 +113,20 @@
                                 <div class="col-sm-3 col-12 topic_info">
                                     <div class="bold topic_category"> <?= $topic->getKategory() ?> </div>
                                     <div class="topic_author"><?= $topic->getAutor() ?></div>
+                                    <div class="">
+                                        <a href="#" class="crud_button">
+                                            <i class="fa fa-trash"></i>
+                                        </a>
+                                        <a href=<?= /** @var \App\Models\Topics $topic */
+                                        "?c=Topic&a=edit&id=" . $topic->getID() ?> class="crud_button">
+                                            <i class="fa fa-edit"></i>
+                                        </a>
+                                    </div>
                                 </div>
                                 <div class="col-sm-9 col-12 topic_text">
                                     <h3>
-                                        <a class="topic_headline" href= <?= "?c=Topic&a=index&id=" . $topic->getID() ?>>
+                                        <a class="topic_headline" href= <?= /** @var \App\Models\Topics $topic */
+                                        "?c=Topic&a=index&id=" . $topic->getID() ?>>
                                             <?= $topic->getTitle() ?>
                                         </a>
                                     </h3>
@@ -196,7 +206,7 @@
                             <?php for ($i = 0; $i < $pagesCount; $i++) { ?>
                                 <li class="navigation_page_num">
                                     <a href="?c=Home&a=index&page=<?= $i ?>">
-                                        <span class="badge badge-dark"><?= $i+1 ?> </span>
+                                        <span class="badge badge-dark"><?= $i + 1 ?> </span>
                                     </a>
                                 </li>
                             <?php } ?>
@@ -236,7 +246,7 @@
                             for ($i = $startIndex; $i < $endIndex; $i++) { ?>
                                 <li class="navigation_page_num">
                                     <a href="?c=Home&a=index&page=<?= $i ?>">
-                                        <span class="badge badge-dark"><?= $i+1 ?></span>
+                                        <span class="badge badge-dark"><?= $i + 1 ?></span>
                                     </a>
                                 </li>
                             <?php } ?>
@@ -246,7 +256,7 @@
                                     <a href="#"><span class="badge badge-dark">...</span></a>
                                 </li>
                                 <li class="navigation_page_num">
-                                    <a href="?c=Home&a=index&page=<?= $pagesCount-1 ?>">
+                                    <a href="?c=Home&a=index&page=<?= $pagesCount - 1 ?>">
                                         <span class="badge badge-dark"><?= $pagesCount ?></span>
                                     </a>
                                 </li>

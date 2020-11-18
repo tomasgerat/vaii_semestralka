@@ -6,19 +6,18 @@ namespace App\Models;
 use App\Core\Model;
 class Topics extends Model
 {
-    private $ID;
-    private $title;
-    private $text;
-    private $created;
-    private $last_edit;
-    private $views;
-    private $autor;
-    private $kategory;
-    private $comments;
+    protected $id;
+    protected $title;
+    protected $text;
+    protected $created;
+    protected $last_edit;
+    protected $views;
+    protected $autor;
+    protected $kategory;
+    protected $comments;
 
-    public function __construct($ID = "", $title = "", $text = "", $created = "", $last_edit = "", $views = "", $autor = "", $kategory = "")
+    public function __construct($title = "", $text = "", $created = "", $last_edit = "", $views = "", $autor = "", $kategory = "")
     {
-        $this->ID = $ID;
         $this->title = $title;
         $this->text = $text;
         $this->created = $created;
@@ -30,7 +29,7 @@ class Topics extends Model
 
     static public function setDbColumns()
     {
-        return ['ID', 'title', 'text', 'created', 'last_edit', 'autor', 'kategory', 'views', 'comments'];
+        return ['id', 'title', 'text', 'created', 'last_edit', 'views', 'kategory', 'autor', 'comments'];
     }
 
     static public function setTableName()
@@ -43,10 +42,11 @@ class Topics extends Model
         self::connect();
         try {
             //$stmt = self::$db->query("SELECT * FROM " . self::getTableName());
-            //select *, (select count(*) from comment where tt.ID = topicID) as comments
-            //from topic as tt where ID in (select distinct topicID from comment where autor like 'jano')
-            $stmt = self::$db->query("SELECT *, (select count(*) from comment where tt.ID = topicID) as comments FROM " . self::getTableName() . " as tt where ID in ".
-            " (SELECT DISTINCT topicID from comment where autor like '" . $login . "' )" );
+            //select distinct *, (select count(*) from comment where tt.ID = topicID) as comments
+            // from topic as tt where (ID in (select distinct topicID from comment where autor like 'jano')) or (autor like 'jano');
+            $stmt = self::$db->query("SELECT DISTINCT *, (select count(*) from comment where tt.ID = topicID) as comments FROM " . self::getTableName()
+            . " as tt where ( ID in ".
+            " (SELECT DISTINCT topicID from comment where autor like '" . $login . "' )) or (autor like '" . $login . "' )" );
             $dbModels = $stmt->fetchAll();
             $models = [];
             foreach ($dbModels as $model) {
@@ -68,7 +68,7 @@ class Topics extends Model
      */
     public function getID()
     {
-        return $this->ID;
+        return $this->id;
     }
 
     /**

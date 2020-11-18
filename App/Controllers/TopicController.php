@@ -12,4 +12,9 @@ class TopicController extends AControllerBase
         //vracat pole tem ktore ma user
         return;
     }
+
+    public function edit()
+    {
+
+    }
 }

@@ -57,3 +57,13 @@ body {
     padding-bottom: 10px;
     padding-top: 10px;
 }
+
+.text_erors {
+    color:red;
+}
+
+
+.crud_button {
+    color: black;
+    display: inline;
+}
