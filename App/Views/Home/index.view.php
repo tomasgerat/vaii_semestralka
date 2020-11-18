@@ -1,4 +1,6 @@
-<?php /** @var Array $data */ ?>
+<?php /** @var Array $data */
+$user = 'jano'; //TODO podla prihlaseneho usera
+?>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -205,6 +207,7 @@
                                 <div class="col-sm-3 col-12 topic_info">
                                     <div class="bold topic_category"> <?= $topic->getKategory() ?> </div>
                                     <div class="topic_author"><?= $topic->getAutor() ?></div>
+                                    <?php if($user == $topic->getAutor()) { ?>
                                     <div class="">
                                         <a href=<?= /** @var \App\Models\Topics $topic */
                                         "?c=Topic&a=delete&id=" . $topic->getID() ?> class="crud_button">
@@ -215,6 +218,7 @@
                                             <i class="fa fa-edit"></i>
                                         </a>
                                     </div>
+                                    <?php } ?>
                                 </div>
                                 <div class="col-sm-9 col-12 topic_text">
                                     <h3>

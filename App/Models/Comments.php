@@ -1,45 +1,42 @@
 <?php
 
-
 namespace App\Models;
 
 use App\App;
 use PDO;
 use PDOException;
 
-class Topics
+class Comments
 {
     protected static $db = null;
     protected static $pkColumn = 'id';
     protected $id;
-    protected $title;
     protected $text;
     protected $created;
     protected $last_edit;
-    protected $views;
+    protected $likes;
+    protected $topicID;
     protected $autor;
-    protected $kategory;
-    protected $comments;
 
-    public function __construct($title = "", $text = "", $created = "", $last_edit = "", $views = "", $autor = "", $kategory = "")
+    public function __construct($text = "", $created = "", $last_edit = "", $likes = "", $topicID="", $autor = "")
     {
-        $this->title = $title;
         $this->text = $text;
         $this->created = $created;
         $this->last_edit = $last_edit;
-        $this->views = $views;
+        $this->likes = $likes;
         $this->autor = $autor;
-        $this->kategory = $kategory;
+        $this->topicID = $topicID;
+        $this->autor = $autor;
     }
 
     static public function setDbColumns()
     {
-        return ['id', 'title', 'text', 'created', 'last_edit', 'views', 'kategory', 'autor', 'comments'];
+        return ['id','text', 'created', 'last_edit', 'likes', 'topicID', 'autor'];
     }
 
     static public function setTableName()
     {
-        return "topic";
+        return "comments";
     }
 
     /**
@@ -80,22 +77,19 @@ class Topics
      * Gets DB connection for additional model methods
      * @return null
      */
-    protected static function getConnection() : PDO
+    protected static function getConnection(): PDO
     {
         self::connect();
         return self::$db;
     }
 
-    static  public function getAllForUser($login)
+    static public function getAllForTopic($id)
     {
         self::connect();
         try {
             //$stmt = self::$db->query("SELECT * FROM " . self::getTableName());
-            //select distinct *, (select count(*) from comment where tt.id = topicID) as comments
-            // from topic as tt where (id in (select distinct topicID from comment where autor like 'jano')) or (autor like 'jano') order by last_edit desc;
-            $stmt = self::$db->query("SELECT DISTINCT *, (select count(*) from comment where tt.id = topicID) as comments FROM " . self::getTableName()
-            . " as tt where ( id in ".
-            " (SELECT DISTINCT topicID from comment where autor like '" . $login . "' )) or (autor like '" . $login . "' ) order by last_edit desc" );
+            //select * from comment where 1 = topicID order by created;
+            $stmt = self::$db->query("SELECT * from ".self::getTableName()." where ".$id." = topicID order by created");
             $dbModels = $stmt->fetchAll();
             $models = [];
             foreach ($dbModels as $model) {
@@ -112,20 +106,33 @@ class Topics
         }
     }
 
-    /**
-     * @return mixed
-     */
-    public function getID()
+    public function getTimeBefor()
     {
-        return $this->id;
+        //2020-11-17 13:06:01
+        $d1 = time();
+        $d2 = strtotime($this->getLastEdit());
+        $diff = $d1 - $d2;
+        if (((int)($diff / 60 / 60 / 24 / 365)) > 0) {
+            return (int)($diff / 60 / 60 / 24 / 365) . " y";
+        }
+        if (((int)($diff / 60 / 60 / 24)) > 0) {
+            return (int)($diff / 60 / 60 / 24) . " d";
+        }
+        if (((int)($diff / 60 / 60)) > 0) {
+            return (int)($diff / 60 / 60) . " h";
+        }
+        if (((int)($diff / 60)) > 0) {
+            return (int)($diff / 60) . " m";
+        }
+        return ((int)($diff)) . " s";
     }
 
     /**
-     * @return mixed|string
+     * @return mixed
      */
-    public function getTitle()
+    public function getId()
     {
-        return $this->title;
+        return $this->id;
     }
 
     /**
@@ -155,73 +162,24 @@ class Topics
     /**
      * @return mixed|string
      */
+    public function getLikes()
+    {
+        return $this->likes;
+    }
+
+    /**
+     * @return mixed|string
+     */
+    public function getTopicID()
+    {
+        return $this->topicID;
+    }
+
+    /**
+     * @return mixed|string
+     */
     public function getAutor()
     {
         return $this->autor;
-    }
-
-    /**
-     * @return mixed|string
-     */
-    public function getKategory()
-    {
-       /* Computers10
-        Games20
-        Science30
-        Movies45
-        Music12
-        Other*/
-        switch ($this->kategory) {
-            case 0:
-                return "Computers";
-            case 1:
-                return "Games";
-            case 2:
-                return "Science";
-            case 3:
-                return "Movies";
-            case 4:
-                return "Music";
-            case 5:
-                return "Other";
-        }
-        return "Other";
-    }
-
-    /**
-     * @return mixed|string
-     */
-    public function getViews()
-    {
-        return $this->views;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getComments()
-    {
-        return $this->comments;
-    }
-
-    public function getTimeBefor()
-    {
-        //2020-11-17 13:06:01
-        $d1=time();
-        $d2=strtotime($this->getCreated());
-        $diff = $d1 - $d2;
-        if(((int)($diff / 60 / 60 / 24 / 365)) > 0) {
-            return (int)($diff / 60 / 60 / 24 / 365) . " y";
-        }
-        if(((int)($diff / 60 / 60 / 24 )) > 0) {
-            return (int)($diff / 60 / 60 / 24) . " d";
-        }
-        if(((int)($diff / 60 / 60 )) > 0) {
-            return (int)($diff / 60 / 60) . " h";
-        }
-        if(((int)($diff / 60  )) > 0) {
-            return (int)($diff / 60 ) . " m";
-        }
-        return ((int)($diff)) . " s";
     }
 }

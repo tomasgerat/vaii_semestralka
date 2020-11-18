@@ -4,14 +4,25 @@
 namespace App\Controllers;
 
 use App\Core\AControllerBase;
+use App\Models\Comments;
 use App\Models\Topic;
 
 class TopicController extends AControllerBase
 {
     public function index()
     {
-        //vracat pole tem ktore ma user
-        return;
+        if(isset($_GET['id'])) {
+            try {
+                $comments = Comments::getAllForTopic($_GET['id']);
+            } catch (\Exception $e) {
+                header("Location: vaii_semestralka?c=Error&a=getComment");
+                die();
+            }
+            return ["comments" => $comments];
+        } else {
+            header("Location: vaii_semestralka?c=Error&a=getTopic");
+            die();
+        }
     }
 
     public function delete() {
@@ -29,7 +40,8 @@ class TopicController extends AControllerBase
 
             } catch (\Exception $e)
             {
-                return null;
+                header("Location: vaii_semestralka?c=Error&a=getTopic");
+                die();
             }
         };
 
@@ -50,7 +62,8 @@ class TopicController extends AControllerBase
 
             } catch (\Exception $e)
             {
-                return null;
+                header("Location: vaii_semestralka?c=Error&a=deleteTopic");
+                die();
             }
 
 
@@ -85,7 +98,8 @@ class TopicController extends AControllerBase
 
             } catch (\Exception $e)
             {
-                return null;
+                header("Location: vaii_semestralka?c=Error&a=getTopic");
+                die();
             }
         }
 
@@ -135,7 +149,8 @@ class TopicController extends AControllerBase
 
             } catch (\Exception $e)
             {
-                return null;
+                header("Location: vaii_semestralka?c=Error&a=editTopic");
+                die();
             }
 
 
