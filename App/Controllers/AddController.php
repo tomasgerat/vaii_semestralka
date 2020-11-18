@@ -16,6 +16,7 @@ class AddController extends AControllerBase
 
     public function create()
     {
+        $user = "jano"; //TODO  z prihlasenia
       /*  $user = new User("jana", "asdddddddd", "jana@fakemail.com", "Jana", "Horvatova");
         $user = new User("Dana", "asddddadddddddd", "dana@fakemail.com", "Dana", "Horvatova");
         $user->save();
@@ -46,7 +47,7 @@ class AddController extends AControllerBase
 
             $created = date('Y-m-d H:i:s');
             $last_edit = $created;
-            $topic = new Topic($_POST['topic_name'], $_POST['topic_text'],$created, $last_edit,0,"jano",$_POST['category']);
+            $topic = new Topic($_POST['topic_name'], $_POST['topic_text'],$created, $last_edit,0,$user,$_POST['category']);
 
             if ($validateErrors == null) {
                 $lastIndex = $topic->save();

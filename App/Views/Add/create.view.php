@@ -58,19 +58,19 @@
 </div>
 <!-- **************************************************************** -->
 <?php
+$topic_title = "";
+$topic_text = "";
+//$topic_category = null;
+$title_erors = [];
+$text_errors = [];
+$category_errors = [];
 if ($data != null) {
-    $topic_title = "";
-    $topic_text = "";
-    $topic_category = null;
-    $title_erors = [];
-    $text_errors = [];
-    $category_errors = [];
     if (isset($data['topic'])) {
-        /** @var \App\Models\Topics $topic */
+        /** @var \App\Models\Topic $topic */
         $topic = $data['topic'];
         $topic_title = $topic->getTitle();
         $topic_text = $topic->getText();
-        $topic_category = $topic->getKategory();
+        //$topic_category = $topic->get();
     }
     if (isset($data['errors'])) {
         if (isset($data['errors']['title'])) {
@@ -116,7 +116,7 @@ if ($data != null) {
             <div class="dropdown mb-3 ml-0">
                 <select name="category" id="category" class="btn-block btn-dark select_item" required>
                     <option value="" disabled selected>Category</option>
-                    <option value="0" default="default">Computers</option>
+                    <option value="0">Computers</option>
                     <option value="1">Games</option>
                     <option value="2">Science</option>
                     <option value="3">Movies</option>

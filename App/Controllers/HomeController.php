@@ -10,7 +10,8 @@ class HomeController extends AControllerBase
 
     public function index()
     {
-        return [ "topics" => Topics::getAllForUser("jano"), "categories" => Categories::getAllCategories()];
+        $user = "jano"; //TODO  z prihlasenia
+        return [ "topics" => Topics::getAllForUser($user), "categories" => Categories::getAllCategories()];
     }
 
 }

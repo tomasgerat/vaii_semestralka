@@ -4,6 +4,7 @@
 namespace App\Controllers;
 
 use App\Core\AControllerBase;
+use App\Models\Topic;
 
 class TopicController extends AControllerBase
 {
@@ -13,8 +14,166 @@ class TopicController extends AControllerBase
         return;
     }
 
+    public function delete() {
+        $user = "jano"; //TODO  z prihlasenia
+
+        if (!isset($_POST['delete'])) {
+            try {
+                if(isset($_GET["id"])) {
+                    $topic = Topic::getOne($_GET["id"]);
+                    return ['topic'=>$topic];
+                }
+                else {
+                    return null;
+                }
+
+            } catch (\Exception $e)
+            {
+                return null;
+            }
+        };
+
+        if ($_POST['delete'] == 1) {
+            try {
+                if(isset($_GET["id"])) {
+                    $topic = Topic::getOne($_GET["id"]);
+                    if($topic->getAutor() == $user)
+                    {
+                        $topic->delete();
+                        header("Location: vaii_semestralka?c=Home&a=index");
+                        die();
+                    }
+                }
+                else {
+                    return null;
+                }
+
+            } catch (\Exception $e)
+            {
+                return null;
+            }
+
+
+        } else {
+            header("Location: vaii_semestralka?c=Home&a=index");
+            die();
+        }
+
+        return null;
+    }
+
     public function edit()
     {
+        $user = "jano"; //TODO  z prihlasenia
+        /*  $user = new User("jana", "asdddddddd", "jana@fakemail.com", "Jana", "Horvatova");
+                $user = new User("Dana", "asddddadddddddd", "dana@fakemail.com", "Dana", "Horvatova");
+                $user->save();
+                $user = User::getAll();
+                $user = User::getOne("dana");
+                $user->delete();
+                $user = User::getAll();
+        */
+        if (!isset($_POST['edit'])) {
+            try {
+                if(isset($_GET["id"])) {
+                    $topic = Topic::getOne($_GET["id"]);
+                    return ['topic'=>$topic];
+                }
+                else {
+                    return null;
+                }
 
+            } catch (\Exception $e)
+            {
+                return null;
+            }
+        }
+
+        $returnArray = null;
+        if ($_POST['edit'] == 1) {
+            $tmpErr = [];
+            $changeCategory = false;
+            if(!isset($_POST['topic_name'])) {
+                $tmpErr['errors']['title'][] =  "No topic title recieved!";
+            }
+            if(!isset($_POST['topic_text'])) {
+                $tmpErr['errors']['text'][] =  "No topic text recieved!";
+            }
+            if(isset($_POST['category'])) {
+                $changeCategory = true;
+            }
+            if(isset($tmpErr['errors']) > 0)
+                return $tmpErr;
+
+            // $test = $this->validateTopic($_POST['topic_name'], $_POST['topic_text'], $_POST['category']);
+            $validateErrors = $this->validateTopic($_POST['topic_name'], $_POST['topic_text'],($changeCategory == true ? $_POST['category'] : null));
+
+            try {
+                if(isset($_GET["id"])) {
+                    $topic = Topic::getOne($_GET["id"]);
+                    $topic->setTitle($_POST['topic_name']);
+                    $topic->setText($_POST['topic_text']);
+                    $topic->setLastEdit(date('Y-m-d H:i:s'));
+                    if($changeCategory == true) {
+                        $topic->setKategory($_POST['category']);
+                    }
+                    if ($validateErrors == null) {
+                        if($topic->getAutor() == $user)
+                        {
+                            $topic->save();
+                        }
+                        $id = $_GET["id"];
+                        header("Location: vaii_semestralka?c=Topic&a=index&id=$id");
+                        die();
+                    } else {
+                        $returnArray = ['topic'=>$topic, 'errors' => $validateErrors];
+                    }
+                }
+                else {
+                    return null;
+                }
+
+            } catch (\Exception $e)
+            {
+                return null;
+            }
+
+
+        } else {
+            header("Location: vaii_semestralka?c=Home&a=index");
+            die();
+        }
+
+        return $returnArray;
+    }
+
+    private function validateTopic($topic_title, $topic_text, $topic_category)
+    {
+        $title_err = [];
+        $text_err = [];
+        $category_err = [];
+        if(strlen($topic_title) > 100) {
+            $title_err[] = "Max title lenght is 100!";
+        }
+        if(strlen($topic_title) < 3) {
+            $title_err[] = "Min title lenght is 3!";
+        }
+        if(strlen($topic_text) < 3) {
+            $text_err[] = "Min topic text lenght is 3!";
+        }
+        if($topic_category != null) {
+            if ($topic_category < 0 || $topic_category > 5) {
+                $category_err[] = "Category is not valid!";
+            }
+        }
+        $aa=count($title_err);
+        $bb=count($text_err);
+        $cc=count($category_err);
+        if($aa > 0 || $bb > 0 || $cc > 0)
+            return ["title" => $title_err, "text" => $text_err, "category" => $category_err];
+        return null;
+        // TODO
+        /*  return ((count($name_err) > 0 || count(($text_err) > 0) || count(($category_err) > 0))
+              ? ["name" => $name_err, "text" => $text_err, "category" => $category_err] : null);*/
     }
 }

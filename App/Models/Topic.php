@@ -91,4 +91,36 @@ class Topic extends Model
     {
         return $this->views;
     }
+
+    /**
+     * @param mixed|string $title
+     */
+    public function setTitle($title): void
+    {
+        $this->title = $title;
+    }
+
+    /**
+     * @param mixed|string $text
+     */
+    public function setText($text): void
+    {
+        $this->text = $text;
+    }
+
+    /**
+     * @param mixed|string $last_edit
+     */
+    public function setLastEdit($last_edit): void
+    {
+        $this->last_edit = $last_edit;
+    }
+
+    /**
+     * @param mixed|string $kategory
+     */
+    public function setKategory($kategory): void
+    {
+        $this->kategory = $kategory;
+    }
 }

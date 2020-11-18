@@ -171,8 +171,8 @@ class Topics extends Model
             return (int)($diff / 60 / 60) . " h";
         }
         if(((int)($diff / 60  )) > 0) {
-            return (int)($diff / 60 / 60) . " m";
+            return (int)($diff / 60 ) . " m";
         }
-        return ((int)($diff / 60 )) . " s";
+        return ((int)($diff)) . " s";
     }
 }

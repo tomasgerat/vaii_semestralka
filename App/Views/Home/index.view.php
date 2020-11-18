@@ -58,7 +58,7 @@
 </div>
 <!-- **************************************************************** -->
 <div class="container">
-    <div class="row">
+    <!--<div class="row">
         <div class="d-none d-sm-block col-lg-8 col-md-8" id="top_navigation">
             <div class="navigation">
                 <div class="float-left">
@@ -85,6 +85,98 @@
                 <div class="float-left"><a href="#" class="navigation_angle">
                         <i class="fa fa-angle-right"></i></a>
                 </div>
+            </div>
+        </div>
+    </div> -->
+    <div class="row">
+        <div class="d-none d-sm-block col-lg-8 col-md-8" id="top_navigation">
+            <div class="navigation">
+
+                <?php
+                /** @var \App\Models\Topics[] $data */
+
+                $pagesCount = (int)(count($data['topics']) / 10) + 1;
+                if (($pagesCount > 1) && ((int)(count($data['topics']) % 10) == 0)) {
+                    $pagesCount--;
+                }
+                $page = 0;
+                if (isset($_GET['page'])) {
+                    $page = $_GET['page'];
+                }
+                if ($pagesCount < 5) { ?>
+                    <div class="float-left">
+                        <a href=<?= $page < 1 ? "#" : "?c=Home&a=index&page=" . ($page - 1) ?> class="navigation_angle">
+                            <i class="fa fa-angle-left"></i>
+                        </a>
+                    </div>
+                    <div class="float-left">
+                        <ul>
+                            <?php for ($i = 0; $i < $pagesCount; $i++) { ?>
+                                <li class="navigation_page_num">
+                                    <a href="?c=Home&a=index&page=<?= $i ?>">
+                                        <span class="badge badge-dark"><?= $i + 1 ?> </span>
+                                    </a>
+                                </li>
+                            <?php } ?>
+                        </ul>
+                    </div>
+                    <div class="float-left">
+                        <a href=<?= $page + 1 >= $pagesCount ? "#" : "?c=Home&a=index&page=" . ($page + 1) ?> class="navigation_angle">
+                            <i class="fa fa-angle-right"></i>
+                        </a>
+                    </div>
+                <?php } ?>
+                <?php
+                if ($pagesCount >= 5) {
+                    $startIndex = $page;
+                    $diff = $pagesCount - $page;
+                    if ($diff < 5) {
+                        $startIndex = $pagesCount - 5;
+                    }
+                    $endIndex = $startIndex + 5;
+                    ?>
+
+                    <div class="float-left">
+                        <a href=<?= $page < 1 ? "#" : "?c=Home&a=index&page=" . ($page - 1) ?> class="navigation_angle">
+                            <i class="fa fa-angle-left"></i>
+                        </a>
+                    </div>
+                    <div class="float-left">
+                        <ul>
+                            <?php
+                            if ($startIndex != 0) { ?>
+                                <li class="navigation_page_num"><a href="?c=Home&a=index&page=0"><span
+                                                class="badge badge-dark">1</span></a></li>
+                                <li class="navigation_page_num"><a href="#"><span
+                                                class="badge badge-dark">...</span></a></li>
+                            <?php } ?>
+                            <?php
+                            for ($i = $startIndex; $i < $endIndex; $i++) { ?>
+                                <li class="navigation_page_num">
+                                    <a href="?c=Home&a=index&page=<?= $i ?>">
+                                        <span class="badge badge-dark"><?= $i + 1 ?></span>
+                                    </a>
+                                </li>
+                            <?php } ?>
+                            <?php
+                            if ($endIndex != $pagesCount) { ?>
+                                <li class="navigation_page_num">
+                                    <a href="#"><span class="badge badge-dark">...</span></a>
+                                </li>
+                                <li class="navigation_page_num">
+                                    <a href="?c=Home&a=index&page=<?= $pagesCount - 1 ?>">
+                                        <span class="badge badge-dark"><?= $pagesCount ?></span>
+                                    </a>
+                                </li>
+                            <?php } ?>
+                        </ul>
+                    </div>
+                    <div class="float-left">
+                        <a href=<?= $page + 1 >= $pagesCount ? "#" : "?c=Home&a=index&page=" . ($page + 1) ?> class="navigation_angle">
+                            <i class="fa fa-angle-right"></i>
+                        </a>
+                    </div>
+                <?php } ?>
             </div>
         </div>
     </div>
@@ -114,7 +206,8 @@
                                     <div class="bold topic_category"> <?= $topic->getKategory() ?> </div>
                                     <div class="topic_author"><?= $topic->getAutor() ?></div>
                                     <div class="">
-                                        <a href="#" class="crud_button">
+                                        <a href=<?= /** @var \App\Models\Topics $topic */
+                                        "?c=Topic&a=delete&id=" . $topic->getID() ?> class="crud_button">
                                             <i class="fa fa-trash"></i>
                                         </a>
                                         <a href=<?= /** @var \App\Models\Topics $topic */
@@ -191,6 +284,9 @@
                 /** @var \App\Models\Topics[] $data */
 
                 $pagesCount = (int)(count($data['topics']) / 10) + 1;
+                if (($pagesCount > 1) && ((int)(count($data['topics']) % 10) == 0)) {
+                    $pagesCount--;
+                }
                 $page = 0;
                 if (isset($_GET['page'])) {
                     $page = $_GET['page'];
