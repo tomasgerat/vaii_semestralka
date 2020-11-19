@@ -228,7 +228,7 @@ $user = 'jano'; //TODO podla prihlaseneho usera
                                         </a>
                                     </h3>
                                     <p>
-                                        <?= $topic->getText() ?>
+                                        <?= (strlen($topic->getText()) > 300 ? (substr($topic->getText(), 0, 300)."...") : $topic->getText()) ?>
                                     </p>
                                 </div>
                             </div>

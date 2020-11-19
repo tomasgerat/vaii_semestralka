@@ -57,7 +57,7 @@
 <!-- **************************************************************** -->
 <div class="container mt-5 mb-3">
     <div id="add_form_holder">
-        <form class="info_form" action="?c=Add&a=create" method="post">
+        <form class="info_form" action="?c=Add&a=create" method="post" autocomplete="off">
             <div class="row mb-3">
                 <label for="topic_name">Topic name</label>
                 <input type="text" class="form-control" id="topic_name" name="topic_name" placeholder="Name of the topic" required>

@@ -31,8 +31,7 @@ class CommentController extends AControllerBase
             if (isset($tmpErr['errors']) > 0)
                 return $tmpErr;
 
-            // $test = $this->validateTopic($_POST['topic_name'], $_POST['topic_text'], $_POST['category']);
-            $validateErrors = $this->validateTopic($_POST['comment_text']);
+            $validateErrors = $this->validateComment($_POST['comment_text']);
 
             $created = date('Y-m-d H:i:s');
             $last_edit = $created;
@@ -89,11 +88,16 @@ class CommentController extends AControllerBase
             if(isset($tmpErr['errors']) > 0)
                 return $tmpErr;
 
-            $validateErrors = $this->validateTopic($_POST['comment_text']);
+            $validateErrors = $this->validateComment($_POST['comment_text']);
 
             try {
                 if(isset($_GET["id"])) {
                     $comment = Comment::getOne($_GET["id"]);
+                    if($comment->getDeleted() == 1)
+                    {
+                        header("Location: vaii_semestralka?c=Error&a=editComment");
+                        die();
+                    }
                     $comment->setText($_POST['comment_text']);
                     $comment->setLastEdit(date('Y-m-d H:i:s'));
                     if ($validateErrors == null) {
@@ -166,11 +170,17 @@ class CommentController extends AControllerBase
             try {
                 if(isset($_GET["id"])) {
                     $comment = Comment::getOne($_GET["id"]);
+                    if($comment->getDeleted() == 1)
+                    {
+                        header("Location: vaii_semestralka?c=Error&a=deleteComment");
+                        die();
+                    }
                     if($comment->getAutor() == $user)
                     {
                         //$comment->delete();
                         $comment->setText("<i>This comment was deleted</i>");
                         $comment->setLastEdit(date('Y-m-d H:i:s'));
+                        $comment->setDeleted(1);
                         $comment->save();
                         header(("Location: vaii_semestralka?c=Topic&a=index&id=" . $comment->getTopicID()));
                         die();
@@ -210,7 +220,7 @@ class CommentController extends AControllerBase
         return null;
     }
 
-    private function validateTopic($comment_text)
+    private function validateComment($comment_text)
     {
         $text_err = [];
         if (strlen($comment_text) < 3) {

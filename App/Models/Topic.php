@@ -123,4 +123,12 @@ class Topic extends Model
     {
         $this->kategory = $kategory;
     }
+
+    /**
+     * @param mixed|string $views
+     */
+    public function setViews($views): void
+    {
+        $this->views = $views;
+    }
 }

@@ -218,16 +218,18 @@ $topicID = $topic->getID();
                     <div class="row">
                         <div class="container mt-2">
                             <small><?= $topic->getTitle() ?></small>
-                            <div class="votes_container">
-                                <button class="button_icon">
-                                    <i class="fa fa-caret-up"></i>
-                                </button>
-                                <i class="fa"></i>
-                                <?= $comment->getLikes() ?>
-                                <button class="button_icon">
-                                    <i class="fa fa-caret-down"></i>
-                                </button>
-                            </div>
+                            <?php if ($comment->getDeleted() == 0) { ?>
+                                <div class="votes_container">
+                                    <button class="button_icon">
+                                        <i class="fa fa-caret-up"></i>
+                                    </button>
+                                    <i class="fa"></i>
+                                    <?= $comment->getLikes() ?>
+                                    <button class="button_icon">
+                                        <i class="fa fa-caret-down"></i>
+                                    </button>
+                                </div>
+                            <?php } ?>
                         </div>
                     </div>
                     <div class="row mt-2">
@@ -242,7 +244,7 @@ $topicID = $topic->getID();
                             <div class="bold topic_author"><?= $comment->getAutor() ?></div>
                             <div class="comment_info">
                                 <?= $comment->getCreated() ?>
-                                <?php if ($user == $comment->getAutor()) { ?>
+                                <?php if (($user == $comment->getAutor()) && ($comment->getDeleted() == 0)) { ?>
                                     <a href=<?= /** @var \App\Models\Comment $comment */
                                     "?c=Comment&a=delete&id=" . $comment->getID() ?> class="crud_button">
                                         <i class="fa fa-trash"></i>
@@ -263,7 +265,7 @@ $topicID = $topic->getID();
     </div>
     <div class="row">
         <div class="container mt-3">
-            <form action="?c=Comment&a=index&topicid=<?= $topic->getID() ?>" method="post">
+            <form action="?c=Comment&a=index&topicid=<?= $topic->getID() ?>" method="post" autocomplete="off">
                 <div class="col-lg-12">
                     <button type="submit" name="newComment" value="1"
                             class=" mb-3 btn btn-lg btn-dark btn-outline-light float-right">

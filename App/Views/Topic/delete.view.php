@@ -74,7 +74,7 @@ if ($data != null) {
     ?>
     <div class="container mt-5 mb-3">
         <div id="add_form_holder">
-            <form class="info_form" action="?c=Topic&a=delete&id=<?= $topic_id ?>" method="post">
+            <form class="info_form" action="?c=Topic&a=delete&id=<?= $topic_id ?>" method="post" autocomplete="off">
                 <div class="row mb-3">
                     <label for="topic_name">Topic name</label>
                     <input type="text" disabled class="form-control" id="topic_name" name="topic_name"

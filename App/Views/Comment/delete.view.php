@@ -71,7 +71,7 @@ if ($data != null) {
     ?>
     <div class="container mt-5 mb-3">
         <div id="add_form_holder">
-            <form class="info_form" action="?c=Comment&a=delete&id=<?= $comment_id ?>" method="post">
+            <form class="info_form" action="?c=Comment&a=delete&id=<?= $comment_id ?>" method="post" autocomplete="off">
                 <div class="row mb-3">
                     <label for="topic_text">Topic text:</label>
                     <textarea class="form-control" disabled rows="10" id="topic_text" name="topic_text"

@@ -4,6 +4,7 @@
 namespace App\Controllers;
 
 use App\Core\AControllerBase;
+use App\Models\Comment;
 use App\Models\Comments;
 use App\Models\Topic;
 
@@ -20,6 +21,8 @@ class TopicController extends AControllerBase
             }
             try {
                 $topic = Topic::getOne($_GET['id']);
+                $topic->setViews($topic->getViews()+1);
+                $topic->save();
             } catch (\Exception $e) {
                 header("Location: vaii_semestralka?c=Error&a=getTopic");
                 die();
@@ -58,6 +61,12 @@ class TopicController extends AControllerBase
                     $topic = Topic::getOne($_GET["id"]);
                     if($topic->getAutor() == $user)
                     {
+                        $allcomments = Comment::getAllForTopic($topic->getID());
+                        /** @var Comment[] $allcomments */
+                        /** @var Comment $com */
+                        foreach ($allcomments as $com) {
+                            $com->delete();
+                        }
                         $topic->delete();
                         header("Location: vaii_semestralka?c=Home&a=index");
                         die();

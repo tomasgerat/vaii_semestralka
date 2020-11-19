@@ -11,6 +11,7 @@ class Comment extends Model
     protected $created;
     protected $last_edit;
     protected $likes;
+    protected $deleted;
     protected $topicID;
     protected $autor;
 
@@ -27,12 +28,35 @@ class Comment extends Model
 
     static public function setDbColumns()
     {
-        return ['id','text', 'created', 'last_edit', 'likes', 'topicID', 'autor'];
+        return ['id','text', 'created', 'last_edit', 'likes', 'deleted', 'topicID', 'autor'];
     }
 
     static public function setTableName()
     {
         return "comment";
+    }
+
+    static public function getAllForTopic($id)
+    {
+        self::connect();
+        try {
+            //$stmt = self::$db->query("SELECT * FROM " . self::getTableName());
+            //select * from comment where 1 = topicID order by created;
+            $stmt = self::$db->query("SELECT * from ".self::getTableName()." where ".$id." = topicID order by created");
+            $dbModels = $stmt->fetchAll();
+            $models = [];
+            foreach ($dbModels as $model) {
+                $tmpModel = new static();
+                $data = array_fill_keys(self::getDbColumns(), null);
+                foreach ($data as $key => $item) {
+                    $tmpModel->$key = $model[$key];
+                }
+                $models[] = $tmpModel;
+            }
+            return $models;
+        } catch (PDOException $e) {
+            throw new \Exception('Query failed: ' . $e->getMessage());
+        }
     }
 
     /**
@@ -113,5 +137,21 @@ class Comment extends Model
     public function setLikes($likes): void
     {
         $this->likes = $likes;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDeleted()
+    {
+        return $this->deleted;
+    }
+
+    /**
+     * @param mixed $deleted
+     */
+    public function setDeleted($deleted): void
+    {
+        $this->deleted = $deleted;
     }
 }

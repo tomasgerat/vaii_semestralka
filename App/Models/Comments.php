@@ -15,6 +15,7 @@ class Comments
     protected $created;
     protected $last_edit;
     protected $likes;
+    protected $deleted;
     protected $topicID;
     protected $autor;
 
@@ -31,7 +32,7 @@ class Comments
 
     static public function setDbColumns()
     {
-        return ['id','text', 'created', 'last_edit', 'likes', 'topicID', 'autor'];
+        return ['id','text', 'created', 'last_edit', 'likes', 'deleted', 'topicID', 'autor'];
     }
 
     static public function setTableName()
@@ -181,5 +182,21 @@ class Comments
     public function getAutor()
     {
         return $this->autor;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDeleted()
+    {
+        return $this->deleted;
+    }
+
+    /**
+     * @param mixed $deleted
+     */
+    public function setDeleted($deleted): void
+    {
+        $this->deleted = $deleted;
     }
 }
