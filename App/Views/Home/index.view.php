@@ -107,7 +107,7 @@ $user = 'jano'; //TODO podla prihlaseneho usera
                 }
                 if ($pagesCount < 5) { ?>
                     <div class="float-left">
-                        <a href=<?= $page < 1 ? "#" : "?c=Home&a=index&page=" . ($page - 1) ?> class="navigation_angle">
+                        <a href="<?= $page < 1 ? "#" : "?c=Home&a=index&page=" . ($page - 1) ?>" class="navigation_angle">
                             <i class="fa fa-angle-left"></i>
                         </a>
                     </div>
@@ -123,7 +123,7 @@ $user = 'jano'; //TODO podla prihlaseneho usera
                         </ul>
                     </div>
                     <div class="float-left">
-                        <a href=<?= $page + 1 >= $pagesCount ? "#" : "?c=Home&a=index&page=" . ($page + 1) ?> class="navigation_angle">
+                        <a href="<?= $page + 1 >= $pagesCount ? "#" : "?c=Home&a=index&page=" . ($page + 1) ?>" class="navigation_angle">
                             <i class="fa fa-angle-right"></i>
                         </a>
                     </div>
@@ -139,7 +139,7 @@ $user = 'jano'; //TODO podla prihlaseneho usera
                     ?>
 
                     <div class="float-left">
-                        <a href=<?= $page < 1 ? "#" : "?c=Home&a=index&page=" . ($page - 1) ?> class="navigation_angle">
+                        <a href="<?= $page < 1 ? "#" : "?c=Home&a=index&page=" . ($page - 1) ?>" class="navigation_angle">
                             <i class="fa fa-angle-left"></i>
                         </a>
                     </div>
@@ -174,7 +174,7 @@ $user = 'jano'; //TODO podla prihlaseneho usera
                         </ul>
                     </div>
                     <div class="float-left">
-                        <a href=<?= $page + 1 >= $pagesCount ? "#" : "?c=Home&a=index&page=" . ($page + 1) ?> class="navigation_angle">
+                        <a href="<?= $page + 1 >= $pagesCount ? "#" : "?c=Home&a=index&page=" . ($page + 1) ?>" class="navigation_angle">
                             <i class="fa fa-angle-right"></i>
                         </a>
                     </div>
@@ -207,28 +207,28 @@ $user = 'jano'; //TODO podla prihlaseneho usera
                                 <div class="col-sm-3 col-12 topic_info">
                                     <div class="bold topic_category"> <?= $topic->getKategory() ?> </div>
                                     <div class="topic_author"><?= $topic->getAutor() ?></div>
-                                    <?php if($user == $topic->getAutor()) { ?>
-                                    <div class="">
-                                        <a href=<?= /** @var \App\Models\Topics $topic */
-                                        "?c=Topic&a=delete&id=" . $topic->getID() ?> class="crud_button">
-                                            <i class="fa fa-trash"></i>
-                                        </a>
-                                        <a href=<?= /** @var \App\Models\Topics $topic */
-                                        "?c=Topic&a=edit&id=" . $topic->getID() ?> class="crud_button">
-                                            <i class="fa fa-edit"></i>
-                                        </a>
-                                    </div>
+                                    <?php if ($user == $topic->getAutor()) { ?>
+                                        <div class="">
+                                            <a href="<?= /** @var \App\Models\Topics $topic */
+                                            "?c=Topic&a=delete&id=" . $topic->getID() ?>" class="crud_button">
+                                                <i class="fa fa-trash"></i>
+                                            </a>
+                                            <a href="<?= /** @var \App\Models\Topics $topic */
+                                            "?c=Topic&a=edit&id=" . $topic->getID() ?>" class="crud_button">
+                                                <i class="fa fa-edit"></i>
+                                            </a>
+                                        </div>
                                     <?php } ?>
                                 </div>
                                 <div class="col-sm-9 col-12 topic_text">
                                     <h3>
-                                        <a class="topic_headline" href= <?= /** @var \App\Models\Topics $topic */
-                                        "?c=Topic&a=index&id=" . $topic->getID() ?>>
+                                        <a class="topic_headline" href= "<?= /** @var \App\Models\Topics $topic */
+                                        "?c=Topic&a=index&id=" . $topic->getID() ?>">
                                             <?= $topic->getTitle() ?>
                                         </a>
                                     </h3>
                                     <p>
-                                        <?= (strlen($topic->getText()) > 300 ? (substr($topic->getText(), 0, 300)."...") : $topic->getText()) ?>
+                                        <?= (strlen($topic->getText()) > 300 ? (substr($topic->getText(), 0, 300) . "...") : $topic->getText()) ?>
                                     </p>
                                 </div>
                             </div>
@@ -297,7 +297,7 @@ $user = 'jano'; //TODO podla prihlaseneho usera
                 }
                 if ($pagesCount < 5) { ?>
                     <div class="float-left">
-                        <a href=<?= $page < 1 ? "#" : "?c=Home&a=index&page=" . ($page - 1) ?> class="navigation_angle">
+                        <a href="<?= $page < 1 ? "#" : "?c=Home&a=index&page=" . ($page - 1) ?>" class="navigation_angle">
                             <i class="fa fa-angle-left"></i>
                         </a>
                     </div>
@@ -313,7 +313,7 @@ $user = 'jano'; //TODO podla prihlaseneho usera
                         </ul>
                     </div>
                     <div class="float-left">
-                        <a href=<?= $page + 1 >= $pagesCount ? "#" : "?c=Home&a=index&page=" . ($page + 1) ?> class="navigation_angle">
+                        <a href="<?= $page + 1 >= $pagesCount ? "#" : "?c=Home&a=index&page=" . ($page + 1) ?>" class="navigation_angle">
                             <i class="fa fa-angle-right"></i>
                         </a>
                     </div>
@@ -329,7 +329,7 @@ $user = 'jano'; //TODO podla prihlaseneho usera
                     ?>
 
                     <div class="float-left">
-                        <a href=<?= $page < 1 ? "#" : "?c=Home&a=index&page=" . ($page - 1) ?> class="navigation_angle">
+                        <a href="<?= $page < 1 ? "#" : "?c=Home&a=index&page=" . ($page - 1) ?>" class="navigation_angle">
                             <i class="fa fa-angle-left"></i>
                         </a>
                     </div>
@@ -364,7 +364,7 @@ $user = 'jano'; //TODO podla prihlaseneho usera
                         </ul>
                     </div>
                     <div class="float-left">
-                        <a href=<?= $page + 1 >= $pagesCount ? "#" : "?c=Home&a=index&page=" . ($page + 1) ?> class="navigation_angle">
+                        <a href="<?= $page + 1 >= $pagesCount ? "#" : "?c=Home&a=index&page=" . ($page + 1) ?>" class="navigation_angle">
                             <i class="fa fa-angle-right"></i>
                         </a>
                     </div>

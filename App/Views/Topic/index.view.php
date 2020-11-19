@@ -82,7 +82,7 @@ $topicID = $topic->getID();
                 }
                 if ($pagesCount < 5) { ?>
                     <div class="float-left">
-                        <a href=<?= $page < 1 ? "#" : "?c=Topic&a=index&page=" . ($page - 1) . "&id=" . $topicID ?> class="navigation_angle">
+                        <a href="<?= $page < 1 ? "#" : "?c=Topic&a=index&page=" . ($page - 1) . "&id=" . $topicID ?>" class="navigation_angle">
                             <i class="fa fa-angle-left"></i>
                         </a>
                     </div>
@@ -98,7 +98,7 @@ $topicID = $topic->getID();
                         </ul>
                     </div>
                     <div class="float-left">
-                        <a href=<?= $page + 1 >= $pagesCount ? "#" : "?c=Topic&a=index&page=" . ($page + 1) . "&id=" . $topicID ?> class="navigation_angle">
+                        <a href="<?= $page + 1 >= $pagesCount ? "#" : "?c=Topic&a=index&page=" . ($page + 1) . "&id=" . $topicID ?>" class="navigation_angle">
                             <i class="fa fa-angle-right"></i>
                         </a>
                     </div>
@@ -114,7 +114,7 @@ $topicID = $topic->getID();
                     ?>
 
                     <div class="float-left">
-                        <a href=<?= $page < 1 ? "#" : "?c=Topic&a=index&page=" . ($page - 1) . "&id=" . $topicID ?> class="navigation_angle">
+                        <a href="<?= $page < 1 ? "#" : "?c=Topic&a=index&page=" . ($page - 1) . "&id=" . $topicID ?>" class="navigation_angle">
                             <i class="fa fa-angle-left"></i>
                         </a>
                     </div>
@@ -150,7 +150,7 @@ $topicID = $topic->getID();
                         </ul>
                     </div>
                     <div class="float-left">
-                        <a href=<?= $page + 1 >= $pagesCount ? "#" : "?c=Topic&a=index&page=" . ($page + 1) . "&id=" . $topicID ?> class="navigation_angle">
+                        <a href="<?= $page + 1 >= $pagesCount ? "#" : "?c=Topic&a=index&page=" . ($page + 1) . "&id=" . $topicID ?>" class="navigation_angle">
                             <i class="fa fa-angle-right"></i>
                         </a>
                     </div>
@@ -179,12 +179,12 @@ $topicID = $topic->getID();
                         <div class="comment_info">
                             <?= $topic->getCreated() ?>
                             <?php if ($user == $topic->getAutor()) { ?>
-                                <a href=<?= /** @var \App\Models\Topics $topic */
-                                "?c=Topic&a=delete&id=" . $topic->getID() ?> class="crud_button">
+                                <a href="<?= /** @var \App\Models\Topics $topic */
+                                "?c=Topic&a=delete&id=" . $topic->getID() ?>" class="crud_button">
                                     <i class="fa fa-trash"></i>
                                 </a>
-                                <a href=<?= /** @var \App\Models\Topics $topic */
-                                "?c=Topic&a=edit&id=" . $topic->getID() ?> class="crud_button">
+                                <a href="<?= /** @var \App\Models\Topics $topic */
+                                "?c=Topic&a=edit&id=" . $topic->getID() ?>" class="crud_button">
                                     <i class="fa fa-edit"></i>
                                 </a>
                             <?php } ?>
@@ -245,12 +245,12 @@ $topicID = $topic->getID();
                             <div class="comment_info">
                                 <?= $comment->getCreated() ?>
                                 <?php if (($user == $comment->getAutor()) && ($comment->getDeleted() == 0)) { ?>
-                                    <a href=<?= /** @var \App\Models\Comment $comment */
-                                    "?c=Comment&a=delete&id=" . $comment->getID() ?> class="crud_button">
+                                    <a href="<?= /** @var \App\Models\Comment $comment */
+                                    "?c=Comment&a=delete&id=" . $comment->getID() ?>" class="crud_button">
                                         <i class="fa fa-trash"></i>
                                     </a>
-                                    <a href=<?= /** @var \App\Models\Comment $comment */
-                                    "?c=Comment&a=edit&id=" . $comment->getID() ?> class="crud_button">
+                                    <a href="<?= /** @var \App\Models\Comment $comment */
+                                    "?c=Comment&a=edit&id=" . $comment->getID() ?>" class="crud_button">
                                         <i class="fa fa-edit"></i>
                                     </a>
                                 <?php } ?>
@@ -292,7 +292,7 @@ $topicID = $topic->getID();
                 }
                 if ($pagesCount < 5) { ?>
                     <div class="float-left">
-                        <a href=<?= $page < 1 ? "#" : "?c=Topic&a=index&page=" . ($page - 1) . "&id=" . $topicID ?> class="navigation_angle">
+                        <a href="<?= $page < 1 ? "#" : "?c=Topic&a=index&page=" . ($page - 1) . "&id=" . $topicID ?>" class="navigation_angle">
                             <i class="fa fa-angle-left"></i>
                         </a>
                     </div>
@@ -308,7 +308,7 @@ $topicID = $topic->getID();
                         </ul>
                     </div>
                     <div class="float-left">
-                        <a href=<?= $page + 1 >= $pagesCount ? "#" : "?c=Topic&a=index&page=" . ($page + 1) . "&id=" . $topicID ?> class="navigation_angle">
+                        <a href="<?= $page + 1 >= $pagesCount ? "#" : "?c=Topic&a=index&page=" . ($page + 1) . "&id=" . $topicID ?>" class="navigation_angle">
                             <i class="fa fa-angle-right"></i>
                         </a>
                     </div>
@@ -324,7 +324,7 @@ $topicID = $topic->getID();
                     ?>
 
                     <div class="float-left">
-                        <a href=<?= $page < 1 ? "#" : "?c=Topic&a=index&page=" . ($page - 1) . "&id=" . $topicID ?> class="navigation_angle">
+                        <a href="<?= $page < 1 ? "#" : "?c=Topic&a=index&page=" . ($page - 1) . "&id=" . $topicID ?>" class="navigation_angle">
                             <i class="fa fa-angle-left"></i>
                         </a>
                     </div>
@@ -360,7 +360,7 @@ $topicID = $topic->getID();
                         </ul>
                     </div>
                     <div class="float-left">
-                        <a href=<?= $page + 1 >= $pagesCount ? "#" : "?c=Topic&a=index&page=" . ($page + 1) . "&id=" . $topicID ?> class="navigation_angle">
+                        <a href="<?= $page + 1 >= $pagesCount ? "#" : "?c=Topic&a=index&page=" . ($page + 1) . "&id=" . $topicID ?>" class="navigation_angle">
                             <i class="fa fa-angle-right"></i>
                         </a>
                     </div>
