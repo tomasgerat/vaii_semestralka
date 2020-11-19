@@ -92,8 +92,5 @@ class AddController extends AControllerBase
         if ($aa > 0 || $bb > 0 || $cc > 0)
             return ["title" => $title_err, "text" => $text_err, "category" => $category_err];
         return null;
-        // TODO
-        /*  return ((count($name_err) > 0 || count(($text_err) > 0) || count(($category_err) > 0))
-              ? ["name" => $name_err, "text" => $text_err, "category" => $category_err] : null);*/
     }
 }

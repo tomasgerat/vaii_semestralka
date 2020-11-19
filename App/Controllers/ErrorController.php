@@ -33,4 +33,18 @@ class ErrorController extends AControllerBase
     {
         return ['text' => 'Failed to get comment!'];
     }
+    public function addComment()
+    {
+        return ['text' => 'Failed to add comment!'];
+    }
+    public function editComment()
+    {
+        return ['text' => 'Failed to edit comment!'];
+    }
+    public function deleteComment()
+    {
+        return ['text' => 'Failed to delete comment!'];
+    }
+
+
 }

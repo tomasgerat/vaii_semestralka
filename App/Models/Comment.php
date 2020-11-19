@@ -32,7 +32,7 @@ class Comment extends Model
 
     static public function setTableName()
     {
-        return "comments";
+        return "comment";
     }
 
     /**
@@ -89,5 +89,29 @@ class Comment extends Model
     public function getAutor()
     {
         return $this->autor;
+    }
+
+    /**
+     * @param mixed|string $text
+     */
+    public function setText($text): void
+    {
+        $this->text = $text;
+    }
+
+    /**
+     * @param mixed|string $last_edit
+     */
+    public function setLastEdit($last_edit): void
+    {
+        $this->last_edit = $last_edit;
+    }
+
+    /**
+     * @param mixed|string $likes
+     */
+    public function setLikes($likes): void
+    {
+        $this->likes = $likes;
     }
 }

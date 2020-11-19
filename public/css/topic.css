@@ -2,3 +2,12 @@
     display: inline-block;
     float: right;
 }
+
+.topic_text {
+    color: #dd4111;
+    font-weight: bold;
+}
+
+.comment_info {
+    display: inline;
+}

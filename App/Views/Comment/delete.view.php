@@ -58,32 +58,24 @@
 </div>
 <!-- **************************************************************** -->
 <?php
-$topic_title = "";
-$topic_text = "";
-$topic_id = -1;
+$comment_text = "";
+$comment_id = -1;
 //$topic_category = null;
 if ($data != null) {
-    if (isset($data['topic'])) {
-        /** @var \App\Models\Topics $topic */
-        $topic = $data['topic'];
-        $topic_title = $topic->getTitle();
-        $topic_text = $topic->getText();
-        // $topic_category = $topic->getKategory();
-        $topic_id = $topic->getID();
+    if (isset($data['comment'])) {
+        /** @var \App\Models\Comment $comment */
+        $comment = $data['comment'];
+        $comment_text = $comment->getText();
+        $comment_id = $comment->getId();
     }
     ?>
     <div class="container mt-5 mb-3">
         <div id="add_form_holder">
-            <form class="info_form" action="?c=Topic&a=delete&id=<?= $topic_id ?>" method="post">
-                <div class="row mb-3">
-                    <label for="topic_name">Topic name</label>
-                    <input type="text" disabled class="form-control" id="topic_name" name="topic_name"
-                           placeholder="Name of the topic" value="<?= $topic_title ?>" required>
-                </div>
+            <form class="info_form" action="?c=Comment&a=delete&id=<?= $comment_id ?>" method="post">
                 <div class="row mb-3">
                     <label for="topic_text">Topic text:</label>
                     <textarea class="form-control" disabled rows="10" id="topic_text" name="topic_text"
-                              required><?= $topic_text ?></textarea>
+                              required><?= $comment_text ?></textarea>
                 </div>
                 <div class="row">
                     <div class="col-md-6">
@@ -102,5 +94,4 @@ if ($data != null) {
             </form>
         </div>
     </div>
-
 <?php } ?>

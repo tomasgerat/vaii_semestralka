@@ -36,7 +36,7 @@ class Comments
 
     static public function setTableName()
     {
-        return "comments";
+        return "comment";
     }
 
     /**

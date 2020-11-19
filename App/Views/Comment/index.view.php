@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>F Delete</title>
+    <title>F Comment</title>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
             integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
             crossorigin="anonymous"></script>
@@ -58,42 +58,46 @@
 </div>
 <!-- **************************************************************** -->
 <?php
-$topic_title = "";
-$topic_text = "";
-$topic_id = -1;
-//$topic_category = null;
+$comment_text = "";
+$text_errors = [];
 if ($data != null) {
-    if (isset($data['topic'])) {
-        /** @var \App\Models\Topics $topic */
-        $topic = $data['topic'];
-        $topic_title = $topic->getTitle();
-        $topic_text = $topic->getText();
-        // $topic_category = $topic->getKategory();
-        $topic_id = $topic->getID();
+    $topicID = $data['topicid'];
+    if (isset($data['comment'])) {
+        /** @var \App\Models\Comment $comment */
+        $comment = $data['comment'];
+        $comment_text = $comment->getText();
+    }
+    if (isset($data['errors'])) {
+        if (isset($data['errors']['text'])) {
+            $text_errors = $data['errors']['text'];
+        }
     }
     ?>
     <div class="container mt-5 mb-3">
         <div id="add_form_holder">
-            <form class="info_form" action="?c=Topic&a=delete&id=<?= $topic_id ?>" method="post">
+            <form class="info_form" action="?c=Comment&a=index&topicid=<?=$topicID?>" method="post">
                 <div class="row mb-3">
-                    <label for="topic_name">Topic name</label>
-                    <input type="text" disabled class="form-control" id="topic_name" name="topic_name"
-                           placeholder="Name of the topic" value="<?= $topic_title ?>" required>
-                </div>
-                <div class="row mb-3">
-                    <label for="topic_text">Topic text:</label>
-                    <textarea class="form-control" disabled rows="10" id="topic_text" name="topic_text"
-                              required><?= $topic_text ?></textarea>
+                    <label for="topic_text">Comment text:</label>
+                    <textarea class="form-control" rows="10" id="comment_text" name="comment_text"
+                              required><?= $comment_text ?></textarea>
+                    <p class="text_erors">
+                        <?php
+                        foreach ($text_errors as $err) { ?>
+                            <?= $err ?><br>
+                            <?php
+                        }
+                        ?>
+                    </p>
                 </div>
                 <div class="row">
                     <div class="col-md-6">
-                        <button type="submit" name="delete" value="1"
+                        <button type="submit" name="create" value="1"
                                 class="mb-3 btn btn-block btn-lg btn-dark btn-outline-light">
-                            Delete
+                            Create
                         </button>
                     </div>
                     <div class="col-md-6">
-                        <button type="submit" name="delete" value="0"
+                        <button type="submit" name="create" value="0"
                                 class="mb-3 btn btn-block btn-lg btn-dark btn-outline-light">
                             Cancel
                         </button>
@@ -102,5 +106,4 @@ if ($data != null) {
             </form>
         </div>
     </div>
-
 <?php } ?>
