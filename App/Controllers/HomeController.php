@@ -3,22 +3,42 @@
 namespace App\Controllers;
 
 use App\Core\AControllerBase;
-use App\Models\Categories;
-use App\Models\Topics;
+use App\Core\Responses\Response;
+use App\Models\Authentificator;
 
 class HomeController extends AControllerBase
 {
 
     public function index()
     {
-        $user = "jano"; //TODO  z prihlasenia
-        try {
-            $topics = Topics::getAllForUser($user);
-        } catch (\Exception $e) {
-            header("Location: vaii_semestralka?c=Error&a=getTopic");
-            die();
+        if(!Authentificator::getInstance()->isLogged()) {
+            return $this->redirect("?c=User&a=login");
+        } else {
+            return $this->redirect("?c=User&a=profile");
+            return $this->html(
+                [
+                    'meno' => 'Patrik Hrkút'
+                ]);
         }
-        return ["topics" => $topics, "categories" => Categories::getAllCategories()];
     }
 
+    public function contact()
+    {
+
+        $longitude = (float)49.33333;
+        $latitude = (float)18.22222;
+        $radius = 10000;//rand(1,10); // in miles
+
+        $lng_min = $longitude - $radius / abs(cos(deg2rad($latitude)) * 69);
+        $lng_max = $longitude + $radius / abs(cos(deg2rad($latitude)) * 69);
+        $lat_min = $latitude - ($radius / 69);
+        $lat_max = $latitude + ($radius / 69);
+
+        return $this->html(
+            [
+                'lng' => rand($lng_min * 100000, $lng_max * 100000) / 100000,
+                'lat' => rand($lat_min * 100000, $lat_max * 100000) / 100000,
+            ]
+        );
+    }
 }

@@ -21,7 +21,7 @@ input[type=text], input[type=password] {
     box-sizing: border-box; /*vyska sirka elementu obsahuje aj padding*/
     border-radius: 12px;
 }
-button[type=button] {
+input[type=submit] {
     width: 100%; /*cely riadok*/
     display: inline-block;
     background-color: #7abaff;
@@ -30,6 +30,18 @@ button[type=button] {
     border-radius: 12px;
     box-sizing: border-box; /*vyska sirka elementu obsahuje aj padding*/
 }
+
+button[type=button] {
+    width: 100%; /*cely riadok*/
+    display: inline-block;
+    background-color: #7abaff;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 12px;
+    box-sizing: border-box; /*vyska sirka elementu obsahuje aj padding*/
+    max-width: 480px;
+}
+
 .col_login_form {
     padding-top: 0;
 }
@@ -41,4 +53,19 @@ button[type=button] {
     padding: 5%;
     padding-bottom: min(20px, 5%);
     padding-top: min(20px, 5%);
+}
+
+img {
+    width: 200px;
+    height: 200px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#bye_img {
+    width: 90%;
+    height: 100%;
+    max-width: 400px;
+    max-height: 200px;
 }

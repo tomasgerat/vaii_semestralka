@@ -1,6 +1,8 @@
 <?php
 
+
 namespace App\Models;
+
 
 use App\Core\Model;
 
@@ -9,149 +11,150 @@ class Comment extends Model
     protected $id;
     protected $text;
     protected $created;
-    protected $last_edit;
+    protected $edited;
     protected $likes;
     protected $deleted;
-    protected $topicID;
+    protected $topic;
     protected $autor;
 
-    public function __construct($text = "", $created = "", $last_edit = "", $likes = "", $topicID="", $autor = "")
+    private $topicObj = null;
+    private $autorObj = null;
+
+    /**
+     * Comment constructor.
+     * @param $text
+     * @param $created
+     * @param $edited
+     * @param $likes
+     * @param $deleted
+     * @param $topic
+     * @param $autor
+     */
+    public function __construct($text="", $created="", $edited="", $likes="", $deleted="", $topic="", $autor="")
     {
         $this->text = $text;
         $this->created = $created;
-        $this->last_edit = $last_edit;
+        $this->edited = $edited;
         $this->likes = $likes;
-        $this->autor = $autor;
-        $this->topicID = $topicID;
+        $this->deleted = $deleted;
+        $this->topic = $topic;
         $this->autor = $autor;
     }
 
     static public function setDbColumns()
     {
-        return ['id','text', 'created', 'last_edit', 'likes', 'deleted', 'topicID', 'autor'];
+        return ['id', 'text', 'created', 'edited', 'likes', 'deleted', 'topic', 'autor'];
     }
 
     static public function setTableName()
     {
-        return "comment";
+        return 'comment';
     }
 
-    static public function getAllForTopic($id)
-    {
-        self::connect();
-        try {
-            //$stmt = self::$db->query("SELECT * FROM " . self::getTableName());
-            //select * from comment where 1 = topicID order by created;
-            $stmt = self::$db->query("SELECT * from ".self::getTableName()." where ".$id." = topicID order by created");
-            $dbModels = $stmt->fetchAll();
-            $models = [];
-            foreach ($dbModels as $model) {
-                $tmpModel = new static();
-                $data = array_fill_keys(self::getDbColumns(), null);
-                foreach ($data as $key => $item) {
-                    $tmpModel->$key = $model[$key];
-                }
-                $models[] = $tmpModel;
-            }
-            return $models;
-        } catch (PDOException $e) {
-            throw new \Exception('Query failed: ' . $e->getMessage());
-        }
-    }
-
-    /**
-     * @return mixed
-     */
     public function getId()
     {
         return $this->id;
     }
 
-    /**
-     * @return mixed|string
-     */
+    public function setId($id): void
+    {
+        $this->id = $id;
+    }
+
     public function getText()
     {
         return $this->text;
     }
 
-    /**
-     * @return mixed|string
-     */
-    public function getCreated()
-    {
-        return $this->created;
-    }
-
-    /**
-     * @return mixed|string
-     */
-    public function getLastEdit()
-    {
-        return $this->last_edit;
-    }
-
-    /**
-     * @return mixed|string
-     */
-    public function getLikes()
-    {
-        return $this->likes;
-    }
-
-    /**
-     * @return mixed|string
-     */
-    public function getTopicID()
-    {
-        return $this->topicID;
-    }
-
-    /**
-     * @return mixed|string
-     */
-    public function getAutor()
-    {
-        return $this->autor;
-    }
-
-    /**
-     * @param mixed|string $text
-     */
     public function setText($text): void
     {
         $this->text = $text;
     }
 
-    /**
-     * @param mixed|string $last_edit
-     */
-    public function setLastEdit($last_edit): void
+    public function getCreated()
     {
-        $this->last_edit = $last_edit;
+        return $this->created;
     }
 
-    /**
-     * @param mixed|string $likes
-     */
+    public function setCreated($created): void
+    {
+        $this->created = $created;
+    }
+
+    public function getEdited()
+    {
+        return $this->edited;
+    }
+
+    public function setEdited($edited): void
+    {
+        $this->edited = $edited;
+    }
+
+    public function getLikes()
+    {
+        return $this->likes;
+    }
+
     public function setLikes($likes): void
     {
         $this->likes = $likes;
     }
 
-    /**
-     * @return mixed
-     */
     public function getDeleted()
     {
         return $this->deleted;
     }
 
-    /**
-     * @param mixed $deleted
-     */
     public function setDeleted($deleted): void
     {
         $this->deleted = $deleted;
     }
+
+    public function getTopic()
+    {
+        return $this->topic;
+    }
+
+    public function setTopic($topic): void
+    {
+        $this->topic = $topic;
+    }
+
+    public function getAutor()
+    {
+        return $this->autor;
+    }
+
+    public function setAutor($autor): void
+    {
+        $this->autor = $autor;
+    }
+
+    public function getTopicObj()
+    {
+        if($this->topicObj == null)
+        {
+            try {
+                $this->topicObj = Topic::getOne($this->autor);
+            } catch (\Exception $e) {
+
+            }
+        }
+        return $this->topicObj;
+    }
+
+    public function getAutorObj()
+    {
+        if($this->autorObj == null)
+        {
+            try {
+                $this->autorObj = User::getOne($this->autor);
+            } catch (\Exception $e) {
+
+            }
+        }
+        return $this->autorObj;
+    }
+
 }

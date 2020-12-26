@@ -16,17 +16,9 @@ class Configuration
 
     public const LOGIN_URL = '/';
 
-    private static $instance = NULL;
+    public const ROOT_LAYOUT = 'root.layout.view.php';
 
-    /**
-     * Gets olny one instance
-     * @return Configuration|null
-     */
-    public static function getInstance()
-    {
-        if (!self::$instance) {
-            self::$instance = new self();
-        }
-        return self::$instance;
-    }
+    public const DEBUG_QUERY = false;
+
+    public const DEBUG_EXCEPTIONS = true;
 }

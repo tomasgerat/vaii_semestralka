@@ -24,6 +24,10 @@ body {
     font-size: 25px;
 }
 
+.paggination_ul {
+    padding-inline-start: 10px;
+}
+
 .button_icon {
     border-radius: 6px;
     display: inline;
@@ -42,6 +46,13 @@ body {
 }
 
 .topic_frame {
+    margin-top: 20px;
+    background-color: #e9ecef;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px #95999c;
+}
+
+.comment_frame {
     margin-top: 20px;
     background-color: #cce5ff;
     border-radius: 10px;
@@ -66,4 +77,13 @@ body {
 .crud_button {
     color: black;
     display: inline;
+}
+
+#img_logo {
+    width: 20px;
+    height: 30px;
+}
+
+.only_icon{
+    padding-top: 15px;
 }

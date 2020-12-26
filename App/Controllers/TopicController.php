@@ -3,208 +3,170 @@
 
 namespace App\Controllers;
 
+
+use App\Config\Configuration;
 use App\Core\AControllerBase;
+use App\Core\Responses\Response;
+use App\Models\Authentificator;
 use App\Models\Comment;
-use App\Models\Comments;
+use App\Models\DataModels\EntriesCount;
+use App\Models\DbSelector;
+use App\Models\Tools;
 use App\Models\Topic;
+use App\Models\User;
 
 class TopicController extends AControllerBase
 {
+
     public function index()
     {
-        if(isset($_GET['id'])) {
-            try {
-                $comments = Comments::getAllForTopic($_GET['id']);
-            } catch (\Exception $e) {
-                header("Location: vaii_semestralka?c=Error&a=getComment");
-                die();
-            }
-            try {
-                $topic = Topic::getOne($_GET['id']);
-                $topic->setViews($topic->getViews()+1);
-                $topic->save();
-            } catch (\Exception $e) {
-                header("Location: vaii_semestralka?c=Error&a=getTopic");
-                die();
-            }
-            return ["comments" => $comments, "topic" => $topic];
+        if (!Authentificator::getInstance()->isLogged()) {
+            return $this->redirect("?c=User&a=login");
         } else {
-            header("Location: vaii_semestralka?c=Error&a=getTopic");
-            die();
+            if (!Tools::checkIssetGet(["id"])) {
+                return $this->redirect("?c=Content&a=home");
+            }
+            $data = [];
+            $data["tabTitle"] = "Topic";
+            $data["tabCss"] = "topic.css";
+            $data["tabActive"] = "";
+            $errors = [];
+            try {
+                /** @var Topic $topic */
+                $topic = Topic::getOne($_GET['id']);
+                $currentPage = isset($_GET['page']) ? $_GET['page'] : 0;
+                /** @var Comment[] $topics */
+                $comments = DbSelector::getAllCommentsWhereTopic($topic->getId(), $currentPage * 10, 10 );
+                $topic->setViews($topic->getViews() + 1);
+                $topic->save();
+
+                /** @var EntriesCount $countObj */
+                $countObj = DbSelector::countAllCommentsInTopic($topic->getId());
+
+                $data['topic'] = $topic;
+                $data['comments'] = $comments;
+                $data["comments_count"] = $countObj[0]->count;
+            } catch (\Exception $e) {
+                $errors["unknow"] = "Could not load Topic. " . (Configuration::DEBUG_EXCEPTIONS ? $e->getMessage() : "");
+            }
+            $data["errors"] = $errors;
+            return $this->html($data, "index");
         }
     }
 
-    public function delete() {
-        $user = "jano"; //TODO  z prihlasenia
+    public function add()
+    {
+        if (!Authentificator::getInstance()->isLogged()) {
+            return $this->redirect("?c=User&a=login");
+        } else {
+            $data = [];
+            $data["tabTitle"] = "Add";
+            $data["tabCss"] = "add.css";
+            $data["tabActive"] = "add";
 
-        if (!isset($_POST['delete'])) {
-            try {
-                if(isset($_GET["id"])) {
-                    $topic = Topic::getOne($_GET["id"]);
-                    return ['topic'=>$topic];
-                }
-                else {
-                    header("Location: vaii_semestralka?c=Error&a=getTopic");
-                    die();
-                }
-
-            } catch (\Exception $e)
-            {
-                header("Location: vaii_semestralka?c=Error&a=getTopic");
-                die();
+            if (!Tools::checkIssetPost(["create", "title", "text", 'category'])) {
+                return $this->html($data, "add");
             }
-        };
+            if ($_POST['create'] == 1) {
+                /** @var User $loggedUser */
+                $loggedUser = Authentificator::getInstance()->getLoggedUser();
+                $data["title"] = $title = $_POST["title"];
+                $data["text"] = $text = $_POST["text"];
+                $data["category"] = $category = $_POST["category"];
 
-        if ($_POST['delete'] == 1) {
-            try {
-                if(isset($_GET["id"])) {
-                    $topic = Topic::getOne($_GET["id"]);
-                    if($topic->getAutor() == $user)
-                    {
-                        $allcomments = Comment::getAllForTopic($topic->getID());
-                        /** @var Comment[] $allcomments */
-                        /** @var Comment $com */
-                        foreach ($allcomments as $com) {
-                            $com->delete();
-                        }
-                        $topic->delete();
-                        header("Location: vaii_semestralka?c=Home&a=index");
-                        die();
+                $errors = $this->validateTopic($title, $text, $category);
+                if(count($errors) == 0)
+                {
+                    $created = date('Y-m-d H:i:s');
+                    $edited = $created;
+                    $topic = new Topic($title, $text, $created, $edited, 0,$category, $loggedUser->getId());
+                    try {
+                        $lastIndex = $topic->save();
+                        return $this->redirect("?c=Topic&a=index&id=".$lastIndex);
+                    } catch (\Exception $e) {
+                        $errors["unknow"] = "Could not save Topic. " . (Configuration::DEBUG_EXCEPTIONS ? $e->getMessage() : "");
                     }
                 }
-                else {
-                    header("Location: vaii_semestralka?c=Error&a=getTopic");
-                    die();
-                }
-
-            } catch (\Exception $e)
-            {
-                header("Location: vaii_semestralka?c=Error&a=deleteTopic");
-                die();
+            } else {
+                return $this->redirect("?c=Content&a=home");
             }
-
-
-        } else {
-            header("Location: vaii_semestralka?c=Home&a=index");
-            die();
+            $data["errors"] = $errors;
+            return $this->html($data, "add");
         }
-
-        return null;
     }
 
     public function edit()
     {
-        $user = "jano"; //TODO  z prihlasenia
-        /*  $user = new User("jana", "asdddddddd", "jana@fakemail.com", "Jana", "Horvatova");
-                $user = new User("Dana", "asddddadddddddd", "dana@fakemail.com", "Dana", "Horvatova");
-                $user->save();
-                $user = User::getAll();
-                $user = User::getOne("dana");
-                $user->delete();
-                $user = User::getAll();
-        */
-        if (!isset($_POST['edit'])) {
-            try {
-                if(isset($_GET["id"])) {
-                    $topic = Topic::getOne($_GET["id"]);
-                    return ['topic'=>$topic];
-                }
-                else {
-                    header("Location: vaii_semestralka?c=Error&a=getTopic");
-                    die();
-                }
-
-            } catch (\Exception $e)
-            {
-                header("Location: vaii_semestralka?c=Error&a=getTopic");
-                die();
-            }
-        }
-
-        $returnArray = null;
-        if ($_POST['edit'] == 1) {
-            $tmpErr = [];
-            $changeCategory = false;
-            if(!isset($_POST['topic_name'])) {
-                $tmpErr['errors']['title'][] =  "No topic title recieved!";
-            }
-            if(!isset($_POST['topic_text'])) {
-                $tmpErr['errors']['text'][] =  "No topic text recieved!";
-            }
-            if(isset($_POST['category'])) {
-                $changeCategory = true;
-            }
-            if(isset($tmpErr['errors']) > 0)
-                return $tmpErr;
-
-            // $test = $this->validateTopic($_POST['topic_name'], $_POST['topic_text'], $_POST['category']);
-            $validateErrors = $this->validateTopic($_POST['topic_name'], $_POST['topic_text'],($changeCategory == true ? $_POST['category'] : null));
-
-            try {
-                if(isset($_GET["id"])) {
-                    $topic = Topic::getOne($_GET["id"]);
-                    $topic->setTitle($_POST['topic_name']);
-                    $topic->setText($_POST['topic_text']);
-                    $topic->setLastEdit(date('Y-m-d H:i:s'));
-                    if($changeCategory == true) {
-                        $topic->setKategory($_POST['category']);
-                    }
-                    if ($validateErrors == null) {
-                        if($topic->getAutor() == $user)
-                        {
-                            $topic->save();
-                        }
-                        $id = $_GET["id"];
-                        header("Location: vaii_semestralka?c=Topic&a=index&id=$id");
-                        die();
-                    } else {
-                        $returnArray = ['topic'=>$topic, 'errors' => $validateErrors];
-                    }
-                }
-                else {
-                    header("Location: vaii_semestralka?c=Error&a=getTopic");
-                    die();
-                }
-
-            } catch (\Exception $e)
-            {
-                header("Location: vaii_semestralka?c=Error&a=editTopic");
-                die();
-            }
-
-
+        if (!Authentificator::getInstance()->isLogged()) {
+            return $this->redirect("?c=User&a=login");
         } else {
-            header("Location: vaii_semestralka?c=Home&a=index");
-            die();
-        }
+            if (!Tools::checkIssetGet(["id"])) {
+                return $this->redirect("?c=Content&a=home");
+            }
+            $data = [];
+            $data["tabTitle"] = "Edit";
+            $data["tabCss"] = "add.css";
+            $data["tabActive"] = "";
 
-        return $returnArray;
+            $data["topic_id"] = $_GET['id'];
+            $errors = [];
+
+            try {
+                $topic = Topic::getOne($_GET['id']);
+            } catch (\Exception $e) {
+                $errors["unknow"] = "Could not load Topic. " . (Configuration::DEBUG_EXCEPTIONS ? $e->getMessage() : "");
+                $data["errors"] = $errors;
+                return $this->html($data, "edit");
+            }
+
+            if (!Tools::checkIssetPost(["create", "title", "text", 'category'])) {
+                $data["title"] = $topic->getTitle();
+                $data["text"] = $topic->getText();
+                $data["category"] = $topic->getCategory();
+                return $this->html($data, "edit");
+            }
+            if ($_POST['create'] == 1) {
+                /** @var User $loggedUser */
+                $loggedUser = Authentificator::getInstance()->getLoggedUser();
+                $data["title"] = $title = $_POST["title"];
+                $data["text"] = $text = $_POST["text"];
+                $data["category"] = $category = $_POST["category"];
+
+                $errors = $this->validateTopic($title, $text, $category);
+                if(count($errors) == 0)
+                {
+                    $topic->setTitle($title);
+                    $topic->setText($text);
+                    $topic->setCategory($category);
+                    $topic->setEdited(date('Y-m-d H:i:s'));
+                    try {
+                        $lastIndex = $topic->save();
+                        return $this->redirect("?c=Topic&a=index&id=".$lastIndex);
+                    } catch (\Exception $e) {
+                        $errors["unknow"] = "Could not save Topic. " . (Configuration::DEBUG_EXCEPTIONS ? $e->getMessage() : "");
+                    }
+                }
+            } else {
+                return $this->redirect("?c=Topic&a=index&id=".$topic->getId());
+            }
+            $data["errors"] = $errors;
+            return $this->html($data, "add");
+        }
     }
 
-    private function validateTopic($topic_title, $topic_text, $topic_category)
+    private function validateTopic($title, $text, $category)
     {
-        $title_err = [];
-        $text_err = [];
-        $category_err = [];
-        if(strlen($topic_title) > 100) {
-            $title_err[] = "Max title lenght is 100!";
+        $errors = [];
+        if (strlen($title) < 3 || strlen($title) > 100) {
+            $errors["title"] = "Title length must be between  3 and  100.";
         }
-        if(strlen($topic_title) < 3) {
-            $title_err[] = "Min title lenght is 3!";
+        $textTrimmed = strip_tags(trim(str_replace("&nbsp;", " ",preg_replace('/\s\s+/', '', $text))));
+        if (strlen($textTrimmed) < 3 || strlen(str_replace(" ", "", $textTrimmed)) == 0) {
+            $errors["text"] = "Min text lenght is 3.";
         }
-        if(strlen($topic_text) < 3) {
-            $text_err[] = "Min topic text lenght is 3!";
+        if ($category < 0 || $category > 5) {
+            $errors["category"] = "Category is not valid.";
         }
-        if($topic_category != null) {
-            if ($topic_category < 0 || $topic_category > 5) {
-                $category_err[] = "Category is not valid!";
-            }
-        }
-        $aa=count($title_err);
-        $bb=count($text_err);
-        $cc=count($category_err);
-        if($aa > 0 || $bb > 0 || $cc > 0)
-            return ["title" => $title_err, "text" => $text_err, "category" => $category_err];
-        return null;
+        return $errors;
     }
 }
