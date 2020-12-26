@@ -8,7 +8,7 @@ use App\Config\Configuration;
 use App\Core\AControllerBase;
 use App\Core\Responses\Response;
 use App\Models\Authentificator;
-use App\Models\Comment;
+use App\Models\DataModels\UserInComment;
 use App\Models\DataModels\EntriesCount;
 use App\Models\DbSelector;
 use App\Models\Tools;
@@ -35,7 +35,7 @@ class TopicController extends AControllerBase
                 /** @var Topic $topic */
                 $topic = Topic::getOne($_GET['id']);
                 $currentPage = isset($_GET['page']) ? $_GET['page'] : 0;
-                /** @var Comment[] $topics */
+                /** @var UserInComment[] $topics */
                 $comments = DbSelector::getAllCommentsWhereTopic($topic->getId(), $currentPage * 10, 10 );
                 $topic->setViews($topic->getViews() + 1);
                 $topic->save();
@@ -51,6 +51,81 @@ class TopicController extends AControllerBase
             }
             $data["errors"] = $errors;
             return $this->html($data, "index");
+        }
+    }
+
+    public function comments() {
+        $data = [];
+        if (!Authentificator::getInstance()->isLogged()) {
+            return $this->json($data);
+        } else{
+            $errors = [];
+            /** @var UserInComment[] $topics */
+            $comments = [];
+            try {
+                /** @var Topic $topic */
+                $topic = Topic::getOne($_GET['id']);
+                $currentPage = isset($_GET['page']) ? $_GET['page'] : 0;
+                $comments = DbSelector::getAllCommentsWhereTopic($topic->getId(), $currentPage * 10, 10 );
+            } catch (\Exception $e) {
+                $errors["unknow"] = "Could not load Topic. " . (Configuration::DEBUG_EXCEPTIONS ? $e->getMessage() : "");
+            }
+            /** @var User $loggedUser */
+            $loggedUser = Authentificator::getInstance()->getLoggedUser();
+            $data["user"] = $loggedUser->getId();
+            $data["errors"] = $errors;
+            $data['comments'] = $comments;
+            return $this->json($data);
+        }
+
+    }
+
+    public function topic() {
+        $data = [];
+        if (!Authentificator::getInstance()->isLogged()) {
+            return $this->json($data);
+        } else {
+            $errors = [];
+            try {
+                /** @var Topic $topic */
+                $topic = Topic::getOne($_GET['id']);
+            } catch (\Exception $e) {
+                $errors["unknow"] = "Could not load Topic. " . (Configuration::DEBUG_EXCEPTIONS ? $e->getMessage() : "");
+            }
+            /** @var User $loggedUser */
+            $loggedUser = Authentificator::getInstance()->getLoggedUser();
+            $data["user"] = $loggedUser->getId();
+            $data["errors"] = $errors;
+            $data['topic'] = $topic;
+            return $this->json($data);
+        }
+    }
+
+    public function pagination() {
+        $data = [];
+        if (!Authentificator::getInstance()->isLogged()) {
+            return $this->json($data);
+        } else {
+            $errors = [];
+            $currentPage = isset($_GET['page']) ? $_GET['page'] : 0;
+            $url = "?c=Topic&a=index&id=";
+            try {
+                /** @var Topic $topic */
+                $topic = Topic::getOne($_GET['id']);
+                /** @var EntriesCount $countObj */
+                $countObj = DbSelector::countAllCommentsInTopic($topic->getId());
+                $c = $countObj[0]->count;
+                $c = ceil((int)$c / 10.0);
+                $htmlPag = Tools::getPaggination($c, $currentPage, $url . $topic->getId());
+            } catch (\Exception $e) {
+                $errors["unknow"] = "Could not create pagination. " . (Configuration::DEBUG_EXCEPTIONS ? $e->getMessage() : "");
+            }
+            /** @var User $loggedUser */
+            $loggedUser = Authentificator::getInstance()->getLoggedUser();
+            $data["user"] = $loggedUser->getId();
+            $data["errors"] = $errors;
+            $data['pagination'] = $htmlPag;
+            return $this->json($data);
         }
     }
 

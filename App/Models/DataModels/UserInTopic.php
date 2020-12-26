@@ -2,7 +2,8 @@
 
 namespace App\Models\DataModels;
 
-class UserInTopic {
+class UserInTopic  extends ADataModel
+{
     public $id;
     public $title;
     public $text;
@@ -13,7 +14,7 @@ class UserInTopic {
     public $category;
     public $comments;
     public $login;
-    public static function getDbColumns()
+    public static function setDbColumns()
     {
         return ['id', 'title', 'text', 'created', 'edited', 'views', 'category', 'autor', 'comments', 'login'];
     }

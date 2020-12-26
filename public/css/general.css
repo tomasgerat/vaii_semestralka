@@ -47,14 +47,14 @@ body {
 
 .topic_frame {
     margin-top: 20px;
-    background-color: #e9ecef;
+    background-color: #cce5ff;
     border-radius: 10px;
     box-shadow: 0 4px 10px #95999c;
 }
 
 .comment_frame {
     margin-top: 20px;
-    background-color: #cce5ff;
+    background-color: #e9ecef;
     border-radius: 10px;
     box-shadow: 0 4px 10px #95999c;
 }

@@ -4,10 +4,10 @@
 namespace App\Models\DataModels;
 
 
-class EntriesCount
+class EntriesCount extends ADataModel
 {
     public $count;
-    public static function getDbColumns()
+    public static function setDbColumns()
     {
         return ['count'];
     }

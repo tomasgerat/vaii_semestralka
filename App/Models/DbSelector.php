@@ -57,14 +57,15 @@ class DbSelector
      */
     static  public function getAllCommentsWhereTopic($topic, $start, $count) : array
     {
-        $sql =  "select * from comment where topic = ? order by created asc". ($count == -1 ? '' :  ' limit ?,?') ;
+        $sql =  'select *, (select login from user where cc.autor = id ) as login from comment as cc where topic = ?'.
+                ' order by created asc'. ($count == -1 ? '' :  ' limit ?,?') ;
         if($count == - 1)
             $params = [ $topic ];
         else
             $params = [ $topic, $start, $count];
 
         try {
-            return DbSelector::doQuery($sql, $params, "App\\Models\\Comment");
+            return DbSelector::doQuery($sql, $params, "App\\Models\\DataModels\\UserInComment");
         } catch (\Exception $e) {
             throw new \Exception('Query failed: ' . $e->getMessage());
         }
@@ -90,7 +91,7 @@ class DbSelector
             " (select login from user where tt.autor = id) as login FROM topic" .
             " as tt where ( id in ".
             " (SELECT DISTINCT topic from comment where autor = ? )) or (autor = ? ) " .
-            'order by edited desc'. ($count == -1 ? '' :  ' limit ?,?') ;
+            'order by created desc'. ($count == -1 ? '' :  ' limit ?,?') ;
         if($count == - 1)
             $params = [ $autor, $autor ];
         else
@@ -119,7 +120,7 @@ class DbSelector
     {
         $sql =  "SELECT DISTINCT *, (select count(*) from comment where tt.id = topic) as comments," .
             " (select login from user where tt.autor = id) as login FROM topic" .
-            ' as tt order by edited desc'. ($count == -1 ? '' :  ' limit ?,?') ;
+            ' as tt order by created desc'. ($count == -1 ? '' :  ' limit ?,?') ;
         if($count == - 1)
             $params = [];
         else
@@ -167,7 +168,7 @@ class DbSelector
             $models = []; // pole UserTopic
             foreach ($dbModels as $model) {
                 $tmpModel = new $className();
-                $data = array_fill_keys($className::getDbColumns(), null);
+                $data = array_fill_keys($className::setDbColumns(), null);
                 foreach ($data as $key => $item) {
                     $tmpModel->$key = $model[$key];
                 }

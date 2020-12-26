@@ -17,7 +17,7 @@ class Comment extends Model
     protected $topic;
     protected $autor;
 
-    private $topicObj = null;
+    private  $autorLogin = "";
     private $autorObj = null;
 
     /**
@@ -131,25 +131,13 @@ class Comment extends Model
         $this->autor = $autor;
     }
 
-    public function getTopicObj()
-    {
-        if($this->topicObj == null)
-        {
-            try {
-                $this->topicObj = Topic::getOne($this->autor);
-            } catch (\Exception $e) {
-
-            }
-        }
-        return $this->topicObj;
-    }
-
     public function getAutorObj()
     {
         if($this->autorObj == null)
         {
             try {
                 $this->autorObj = User::getOne($this->autor);
+                $this->autorLogin = $this->autorObj->getLogin();
             } catch (\Exception $e) {
 
             }

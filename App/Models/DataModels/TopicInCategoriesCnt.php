@@ -4,7 +4,7 @@
 namespace App\Models\DataModels;
 
 
-class TopicInCategoriesCnt
+class TopicInCategoriesCnt extends ADataModel
 {
     public $computers;
     public $games;
@@ -12,7 +12,7 @@ class TopicInCategoriesCnt
     public $movies;
     public $music;
     public $other;
-    static public function getDbColumns()
+    static public function setDbColumns()
     {
         return ['computers', 'games', 'science', 'movies', 'music', 'other'];
     }
