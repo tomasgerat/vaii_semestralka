@@ -87,3 +87,15 @@ body {
 .only_icon{
     padding-top: 15px;
 }
+
+.topic_text {
+    padding-top: 15px;
+    padding-right: 15px;
+    padding-bottom: 15px;
+    padding-left: 15px;
+    word-wrap: break-word;
+}
+
+.comment_text {
+    word-wrap: break-word;
+}

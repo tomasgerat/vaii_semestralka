@@ -139,7 +139,7 @@ $topics_count = isset($data['topics_count']) ? $data['topics_count'] : 0;
                                     <h3>
                                         <a class="topic_headline" href= "<?=
                                         "?c=Topic&a=index&id=" . $topic->id ?>">
-                                            <?= $topic->title ?>
+                                            <?= $topic->title . ' ['.$i.']' ?>
                                         </a>
                                     </h3>
                                     <p>
@@ -150,7 +150,7 @@ $topics_count = isset($data['topics_count']) ? $data['topics_count'] : 0;
                                             $topicText = (strlen($topicText) > 300 ? (substr($topicText, 0, 300) . "...") : $topicText);
                                             if(substr_count($topicText, "<p>") > 4) {
                                                 $pos = 0;
-                                                for ($i = 0; $i < 4; $i++) {
+                                                for ($j = 0; $j < 4; $j++) {
                                                     $pos = strpos($topicText, "<p>", ++$pos);
                                                 }
                                                 $topicText = substr($topicText, 0, $pos);

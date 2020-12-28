@@ -6,7 +6,6 @@ namespace App\Controllers;
 
 use App\Config\Configuration;
 use App\Core\AControllerBase;
-use App\Core\Responses\Response;
 use App\Models\Authentificator;
 use App\Models\DataModels\UserInComment;
 use App\Models\DataModels\EntriesCount;
@@ -52,32 +51,6 @@ class TopicController extends AControllerBase
             $data["errors"] = $errors;
             return $this->html($data, "index");
         }
-    }
-
-    public function comments() {
-        $data = [];
-        if (!Authentificator::getInstance()->isLogged()) {
-            return $this->json($data);
-        } else{
-            $errors = [];
-            /** @var UserInComment[] $topics */
-            $comments = [];
-            try {
-                /** @var Topic $topic */
-                $topic = Topic::getOne($_GET['id']);
-                $currentPage = isset($_GET['page']) ? $_GET['page'] : 0;
-                $comments = DbSelector::getAllCommentsWhereTopic($topic->getId(), $currentPage * 10, 10 );
-            } catch (\Exception $e) {
-                $errors["unknow"] = "Could not load Topic. " . (Configuration::DEBUG_EXCEPTIONS ? $e->getMessage() : "");
-            }
-            /** @var User $loggedUser */
-            $loggedUser = Authentificator::getInstance()->getLoggedUser();
-            $data["user"] = $loggedUser->getId();
-            $data["errors"] = $errors;
-            $data['comments'] = $comments;
-            return $this->json($data);
-        }
-
     }
 
     public function topic() {
@@ -202,7 +175,7 @@ class TopicController extends AControllerBase
             }
             if ($_POST['create'] == 1) {
                 /** @var User $loggedUser */
-                $loggedUser = Authentificator::getInstance()->getLoggedUser();
+                //$loggedUser = Authentificator::getInstance()->getLoggedUser();
                 $data["title"] = $title = $_POST["title"];
                 $data["text"] = $text = $_POST["text"];
                 $data["category"] = $category = $_POST["category"];

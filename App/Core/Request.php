@@ -17,6 +17,7 @@ class Request
 
     private bool $ajax = false;
 
+    private array $bodyData = [];
     /**
      * Request constructor.
      */
@@ -28,6 +29,14 @@ class Request
         $this->server = $_SERVER;
 
         $this->ajax = (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest');
+
+        $data = file_get_contents('php://input');
+        if(!($data === false) && empty($data) == false) {
+            $data = json_decode($data, true);
+            if (json_last_error() == 0) {
+                $this->bodyData = $data;
+            }
+        }
     }
 
     /**
@@ -89,5 +98,13 @@ class Request
         } else {
             return null;
         }
+    }
+
+    /**
+     * @return array|mixed
+     */
+    public function getBodyData()
+    {
+        return $this->bodyData;
     }
 }

@@ -42,6 +42,8 @@ class Tools
 
     public static function getPaggination($pagesCount, $currentPage, $url)
     {
+        if($pagesCount == 0)
+            $pagesCount = 1;
         //$pagesCount = ceil(count($topics) / 10.0);
         $page = $currentPage;
         if($pagesCount <= 0)

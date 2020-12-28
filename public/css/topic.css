@@ -3,11 +3,10 @@
     float: right;
 }
 
-.topic_text {
-    color: #dd4111;
-    font-weight: bold;
-}
-
 .comment_info {
     display: inline;
+}
+
+.btn_comment_action {
+    border-width: 0px;
 }
