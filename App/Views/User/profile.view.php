@@ -15,6 +15,7 @@ if (empty($full_name))
 $errors = isset($data["errors"]) ? $data["errors"] : [];
 
 ?>
+<script src="forum/public/js/profile.js" type="module"></script>
 
 <div class="container mt-5 mb-3">
     <div class="row">
@@ -78,7 +79,7 @@ $errors = isset($data["errors"]) ? $data["errors"] : [];
                         </div>
                     </div>
                     <?php echo Tools::getErrorDiv("e_mail", $errors) ?>
-                    <button type="submit" name="submit" class="mb-3 btn  btn-lg btn-dark btn-block btn-outline-light">
+                    <button type="submit" name="submit" id="submitInfo" class="mb-3 btn  btn-lg btn-dark btn-block btn-outline-dark-light">
                         Save
                     </button>
                 </form>
@@ -97,10 +98,11 @@ $errors = isset($data["errors"]) ? $data["errors"] : [];
                             <label for="confirm_pass">Confirm password:</label>
                         </div>
                         <div class="col-md-8">
-                            <input type="password" class="form-control" id="confirm_pass" name="confirm_pass" value="" required>
+                            <input type="password" class="form-control" id="confirmPass" name="confirm_pass" value="" required>
                         </div>
                     </div>
-                    <button type="submit" name="submit" class="mb-3 btn  btn-lg btn-dark btn-block btn-outline-light">
+                    <?php echo Tools::getErrorDiv("confirmPass", $errors) ?>
+                    <button type="submit" name="submit" id="submitPassword" class="mb-3 btn  btn-lg btn-dark btn-block btn-outline-dark-light">
                         Change
                     </button>
                 </form>

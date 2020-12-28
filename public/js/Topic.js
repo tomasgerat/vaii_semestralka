@@ -256,9 +256,9 @@ class Comment {
             //let plainText = strip_tags(commentData.replace('/\s\s+/', '').replace(/\u00a0/g, " ", ' ').trim(), "");
             let plainText = this.editor.document.getBody().getText();
             console.log(commentData);
-            console.log(plainText);
-            console.log(plainText.length);
-            console.log(plainText.replace(' ', '').length);
+            //console.log(plainText);
+            //console.log(plainText.length);
+            //console.log(plainText.replace(' ', '').length);
             if (plainText.length < 3 || plainText.replace(/(?:\r\n|\r|\n)/g, '').replace(/\s/g,'').length === 0) {
                 this.errEditorEl.innerText = "Comment length must be at least 3 chars.";
                 return;

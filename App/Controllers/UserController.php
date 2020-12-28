@@ -162,6 +162,60 @@ class UserController extends AControllerBase
         }
     }
 
+    public function existLogin()
+    {
+        $data = [];
+        $errors = [];
+        $bodyData = $this->request()->getBodyData();
+        if (!isset($bodyData["login"])) {
+            $errors["unknown"] = "Login not set.";
+            $data['errors'] = $errors;
+            return $this->json($data);
+        }
+        /** @var User $loggedUser */
+        $login = $bodyData["login"];
+        try {
+            /** @var User[] $comments */
+            $comments = User::getAll("login like ?", [$login]);
+            if(sizeof($comments) == 0) {
+                $errors["unknown"] = "";
+            } else {
+                $errors["unknown"] = "Login already used.";
+            }
+        } catch (\Exception $e) {
+            $errors["unknown"] = "Could not perform query. " . (Configuration::DEBUG_EXCEPTIONS ? $e->getMessage() : "");
+        }
+        $data['errors'] = $errors;
+        return $this->json($data);
+    }
+
+    public function existEmail()
+    {
+        $data = [];
+        $errors = [];
+        $bodyData = $this->request()->getBodyData();
+        if (!isset($bodyData["e_mail"])) {
+            $errors["unknown"] = "Email not set.";
+            $data['errors'] = $errors;
+            return $this->json($data);
+        }
+        /** @var User $loggedUser */
+        $email = $bodyData["e_mail"];
+        try {
+            /** @var User[] $comments */
+            $comments = User::getAll("e_mail like ?", [$email]);
+            if(sizeof($comments) == 0) {
+                $errors["unknown"] = "";
+            } else {
+                $errors["unknown"] = "E-mail already used.";
+            }
+        } catch (\Exception $e) {
+            $errors["unknown"] = "Could not perform query. " . (Configuration::DEBUG_EXCEPTIONS ? $e->getMessage() : "");
+        }
+        $data['errors'] = $errors;
+        return $this->json($data);
+    }
+
     private function validateUser($login, $password, $e_mail, $first_name, $last_name): array
     {
         $errors = [];

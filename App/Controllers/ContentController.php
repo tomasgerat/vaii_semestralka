@@ -12,6 +12,7 @@ use App\Models\DataModels\UserInTopic;
 use App\Models\DataModels\EntriesCount;
 use App\Models\DbSelector;
 use App\Models\Tools;
+use App\Models\Topic;
 use App\Models\User;
 
 class ContentController extends AControllerBase
@@ -30,6 +31,7 @@ class ContentController extends AControllerBase
             $data["tabTitle"] = "Home";
             $data["tabCss"] = "main.css";
             $data["tabActive"] = "home";
+            $data["url"] = "?c=Content&a=home";
             $errors["unknown"] = "";
             $topics = null;
 
