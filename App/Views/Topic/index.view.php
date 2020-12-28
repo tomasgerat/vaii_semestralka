@@ -30,7 +30,7 @@ $user = $userObj->getId();
 
 <div class="container">
     <div class="row">
-        <?php echo Tools::getErrorDiv("unknow", $errors) ?>
+        <?php echo Tools::getErrorDiv("unknown", $errors) ?>
     </div>
     <div class="row">
         <?php echo Tools::getErrorDiv("edit", $errors) ?>
@@ -38,7 +38,7 @@ $user = $userObj->getId();
     <div class="row">
         <div class="d-none d-sm-block col-lg-8 col-md-8" id="top_navigation">
             <div class="navigation" id="top_nav">
-                <?php echo Tools::getPaggination(ceil($comments_count / 10.0), $currentPage, "?c=Topic&a=index&id=".$topic->getId()) ?>
+                <?php echo Tools::getPaggination(ceil($comments_count / 10.0), $currentPage, "?c=Topic&a=index&id=" . $topic->getId()) ?>
             </div>
         </div>
     </div>
@@ -48,25 +48,26 @@ $user = $userObj->getId();
     $tid_login = "topic_login";
     $tid_created = "topic_created";
     if ($topic != null) { ?>
-        <p hidden id="current_topic"><?=$topic->getId()?></p>
+        <p hidden id="current_topic"><?= $topic->getId() ?></p>
         <div class="row">
             <div class="col-lg-12 col-md-12">
                 <div class="container topic_frame">
                     <div class="row">
-                        <div class="container mt-2  topic_text" id="<?=$tid_title?>">
+                        <div class="container mt-2  topic_text" id="<?= $tid_title ?>">
                             <h4><?= $topic->getTitle() ?></h4>
                         </div>
                     </div>
                     <div class="row mt-2">
                         <div class="col-sm-9 col-12">
-                            <div class="container  topic_text" id="<?=$tid_text?>">
-                                    <?= $topic->getText() ?>
+                            <div class="container  topic_text" id="<?= $tid_text ?>">
+                                <?= $topic->getText() ?>
                             </div>
                         </div>
                         <div class="col-sm-3 col-12 topic_info">
-                            <div class="bold topic_author" id="<?=$tid_login?>"><?= ($topicAutor == null ? "@unknow@" : $topicAutor->getLogin()) ?></div>
-                            <div class="comment_info" >
-                                <span id="<?=$tid_created?>"><?= $topic->getCreated() ?></span>
+                            <div class="bold topic_author"
+                                 id="<?= $tid_login ?>"><?= ($topicAutor == null ? "@unknown@" : $topicAutor->getLogin()) ?></div>
+                            <div class="comment_info">
+                                <span id="<?= $tid_created ?>"><?= $topic->getCreated() ?></span>
                                 <?php if ($user == $topic->getAutor()) { ?>
                                     <a href="<?=
                                     "?c=Topic&a=delete&id=" . $topic->getID() ?>" class="crud_button">
@@ -95,49 +96,38 @@ $user = $userObj->getId();
                     break;
                 }
                 $comment = $comments[$i];
-                $cid_commentID = "commentID_".$i;
-                $cid_topicTitle = "topicTitle_".$i;
-                $cid_votes = "votes_container_".$i;
-                $cid_text = "comment_text_".$i;
-                $cid_login = "comment_login_".$i;
-                $cid_created = "comment_created_".$i;
+                $cid_commentID = "commentID_" . $i;
+                $cid_topicTitle = "topicTitle_" . $i;
+                $cid_text = "comment_text_" . $i;
+                $cid_login = "comment_login_" . $i;
+                $cid_created = "comment_created_" . $i;
                 ?>
-                <div class="container comment_frame" id="comment_<?=$i?>">
+                <div class="container comment_frame" id="comment_<?= $i ?>">
                     <div class="row">
-                        <p hidden id="<?=$cid_commentID?>"><?=$comment->id?></p>
+                        <p hidden id="<?= $cid_commentID ?>"><?= $comment->id ?></p>
                         <div class="container mt-2">
-                            <small id="<?=$cid_topicTitle?>"><?= $topic->getTitle() ?></small>
-                            <?php if ($comment->deleted == 0) { ?>
-                                <div class="votes_container" >
-                                    <button class="button_icon">
-                                        <i class="fa fa-caret-up"></i>
-                                    </button>
-                                    <i class="fa"></i>
-                                    <span id="<?= $cid_votes ?>"><?=$comment->likes?></span>
-                                    <button class="button_icon">
-                                        <i class="fa fa-caret-down"></i>
-                                    </button>
-                                </div>
-                            <?php } ?>
+                            <small id="<?= $cid_topicTitle ?>"><?= $topic->getTitle() ?></small>
                         </div>
                     </div>
                     <div class="row mt-2">
                         <div class="col-sm-9 col-12">
-                            <div class="container comment_text"  id="<?=$cid_text?>">
+                            <div class="container comment_text" id="<?= $cid_text ?>">
                                 <?= $comment->text ?>
                             </div>
                         </div>
                         <div class="col-sm-3 col-12 topic_info">
-                            <div class="bold topic_author" id="<?=$cid_login?>"><?= $comment->login ?></div>
+                            <div class="bold topic_author" id="<?= $cid_login ?>"><?= $comment->login ?></div>
                             <div class="comment_info">
-                                <p id="<?=$cid_created?>"><?= $comment->created ?></p>
+                                <p id="<?= $cid_created ?>"><?= $comment->created ?></p>
                                 <?php if (($user == $comment->autor) && ($comment->deleted == 0)) { ?>
-                                    <button class="crud_button btn_comment_action" id="editBtn_<?=$i?>">
-                                        <i class="fa fa-edit"></i>
-                                    </button>
-                                    <button class="crud_button btn_comment_action" id="deleteBtn_<?=$i?>">
-                                        <i class="fa fa-trash"></i>
-                                    </button>
+                                    <div>
+                                        <button class="crud_button btn_no_border" id="editBtn_<?= $i ?>">
+                                            <i class="fa fa-edit"></i>
+                                        </button>
+                                        <button class="crud_button btn_no_border" id="deleteBtn_<?= $i ?>">
+                                            <i class="fa fa-trash"></i>
+                                        </button>
+                                    </div>
                                 <?php } ?>
                             </div>
                         </div>
@@ -151,14 +141,14 @@ $user = $userObj->getId();
     <?php if ($topic != null) { ?>
         <div class="row">
             <div class="container mt-3">
-               <!-- <form action="#" method="post" autocomplete="off"> -->
-                    <div class="col-lg-12">
-                        <button type="submit" name="newComment" value="1" id="newCommentBtn"
-                                class=" mb-3 btn btn-lg btn-dark btn-outline-light float-right">
-                            New comment
-                        </button>
-                    </div>
-               <!-- </form> -->
+                <!-- <form action="#" method="post" autocomplete="off"> -->
+                <div class="col-lg-12">
+                    <button type="submit" name="newComment" value="1" id="newCommentBtn"
+                            class=" mb-3 btn btn-lg btn-dark btn-outline-light float-right">
+                        New comment
+                    </button>
+                </div>
+                <!-- </form> -->
             </div>
         </div>
     <?php } ?>
@@ -192,9 +182,13 @@ $user = $userObj->getId();
     <div class="row">
         <div class="col-lg-8 col-md-8" id="bottom_navigation">
             <div class="navigation" id="bottom_nav">
-                <?php echo Tools::getPaggination(ceil($comments_count / 10.0), $currentPage,  "?c=Topic&a=index&id=".$topic->getId()) ?>
+                <?php echo Tools::getPaggination(ceil($comments_count / 10.0), $currentPage, "?c=Topic&a=index&id=" . $topic->getId()) ?>
             </div>
         </div>
     </div>
 </div>
+
+<?php
+include dirname(__DIR__) . "/Common/delete_modal.php";
+?>
 </body>

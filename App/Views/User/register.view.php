@@ -30,7 +30,7 @@ $login = isset($data["login"]) ? $data["login"] : "";
         <div class="col-sm-12 instructions">
             Please register your account!
         </div>
-        <?php  echo (getErrorDiv("unknow", $errors)) ?>
+        <?php  echo (getErrorDiv("unknown", $errors)) ?>
     </div>
     <div class="row">
         <div class="col-sm-12 col_login_form">

@@ -99,3 +99,8 @@ body {
 .comment_text {
     word-wrap: break-word;
 }
+
+.btn_no_border {
+    border-width: 0px;
+    background-color: transparent;
+}

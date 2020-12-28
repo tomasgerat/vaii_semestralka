@@ -12,7 +12,6 @@ class Comment extends Model
     protected $text;
     protected $created;
     protected $edited;
-    protected $likes;
     protected $deleted;
     protected $topic;
     protected $autor;
@@ -25,17 +24,15 @@ class Comment extends Model
      * @param $text
      * @param $created
      * @param $edited
-     * @param $likes
      * @param $deleted
      * @param $topic
      * @param $autor
      */
-    public function __construct($text="", $created="", $edited="", $likes="", $deleted="", $topic="", $autor="")
+    public function __construct($text="", $created="", $edited="", $deleted="", $topic="", $autor="")
     {
         $this->text = $text;
         $this->created = $created;
         $this->edited = $edited;
-        $this->likes = $likes;
         $this->deleted = $deleted;
         $this->topic = $topic;
         $this->autor = $autor;
@@ -43,7 +40,7 @@ class Comment extends Model
 
     static public function setDbColumns()
     {
-        return ['id', 'text', 'created', 'edited', 'likes', 'deleted', 'topic', 'autor'];
+        return ['id', 'text', 'created', 'edited', 'deleted', 'topic', 'autor'];
     }
 
     static public function setTableName()
@@ -89,16 +86,6 @@ class Comment extends Model
     public function setEdited($edited): void
     {
         $this->edited = $edited;
-    }
-
-    public function getLikes()
-    {
-        return $this->likes;
-    }
-
-    public function setLikes($likes): void
-    {
-        $this->likes = $likes;
     }
 
     public function getDeleted()

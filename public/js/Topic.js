@@ -12,7 +12,8 @@ class Topic {
     reload() {
         console.log("reload");
         let unknowErrorEl = document.getElementById("err_unknow");
-        unknowErrorEl.innerText = "";
+        if(unknowErrorEl !== null)
+            unknowErrorEl.innerText = "";
         this.loadTopic();
         this.loadPagination();
         this.loadComments();
@@ -30,8 +31,8 @@ class Topic {
             let topic = data.topic;
             let errors = data.errors;
             let unknowErrorEl = document.getElementById("err_unknow");
-            if (errors.unknow !== undefined) {
-                unknowErrorEl.innerText += errors.unknow;
+            if (errors.unknown !== undefined) {
+                unknowErrorEl.innerText += errors.unknown;
             }
             let titleEl = document.getElementById("topic_title");
             let textEl = document.getElementById("topic_text");
@@ -65,8 +66,8 @@ class Topic {
             let paginationHtml = data.pagination;
             let errors = data.errors;
             let unknowErrorEl = document.getElementById("err_unknow");
-            if (errors.unknow !== undefined) {
-                unknowErrorEl.innerText += errors.unknow;
+            if (errors.unknown !== undefined) {
+                unknowErrorEl.innerText += errors.unknown;
             }
             let pagTop = document.getElementById("top_nav");
             let pagBottom = document.getElementById("bottom_nav");
@@ -102,8 +103,8 @@ class Topic {
             let unknowErrorEl = document.getElementById("err_unknow");
             let topicTitleEl = document.getElementById("topic_title");
             let topicTitle = "";
-            if (errors.unknow !== undefined) {
-                unknowErrorEl.innerText += errors.unknow;
+            if (errors.unknown !== undefined) {
+                unknowErrorEl.innerText += errors.unknown;
             }
             if(topicTitleEl !== null)
                 topicTitle = topicTitleEl.innerText;
@@ -177,6 +178,8 @@ class Comment {
             () => { this.editComment() });
         document.getElementById('cancelEditBtn').addEventListener("click",
             () => { this.hideEditorEdit() });
+        document.getElementById('confirmedDeleteBtn').addEventListener("click",
+            () => { this.deleteComment() });
         for (let i = 0; i < 10; i++) {
             this.addEditBtnHandler(i);
             this.addDeleteBtnHandle(i);
@@ -185,22 +188,18 @@ class Comment {
 
     addEditBtnHandler(i) {
         console.log("Adding edit handler: " + i.toString())
-        let commentIdEl = document.getElementById("commentID_"+ i.toString());
         let editBtnEl = document.getElementById("editBtn_"+i.toString());
-        if(commentIdEl === null || editBtnEl === null)
+        if(editBtnEl === null)
             return;
-        //let commentID = commentIdEl.innerText;
         editBtnEl.addEventListener("click", () => { this.editHndl(i); });
     }
 
     addDeleteBtnHandle(i) {
         console.log("Adding delete handler: " + i.toString())
-        let commentIdEl = document.getElementById("commentID_"+ i.toString());
-        let editBtnEl = document.getElementById("deleteBtn_"+i.toString());
-        if(commentIdEl === null || editBtnEl === null)
+        let delBtnEl = document.getElementById("deleteBtn_"+i.toString());
+        if(delBtnEl === null)
             return;
-        //let commentID = commentIdEl.innerText;
-        editBtnEl.addEventListener("click", () => { this.deleteHndl(i); });
+        delBtnEl.addEventListener("click", () => { this.deleteHndl(i); });
     }
 
     sendComment() {
@@ -212,15 +211,39 @@ class Comment {
     }
 
     editComment() {
-        document.getElementById("err_edit").innerText = "";
         let c_id = document.getElementById("commentID_" + this.editingId.toString()).innerText.trim();
         console.log("Editing comment " + this.editingId + " c_id: " + c_id);
         this.uploadComment("?c=Comment&a=edit&id=" + c_id, "err_edit", true)
             .then( ()  => {this.hideEditorEdit()});
     }
 
-    deleteComment() {
+    async deleteComment() {
+        $('#deleteModal').modal('hide');
+        let unknowErrorEl = document.getElementById("err_edit");
+        unknowErrorEl.innerText = "";
+        let c_id = document.getElementById("commentID_" + this.deletingId.toString()).innerText.trim();
+        console.log("Deleting comment " + this.deletingId + " c_id: " + c_id);
+        try{
+            let response = await fetch("?c=Comment&a=delete&id=" + c_id, {
+                method: 'POST', // or 'PUT'
+                headers: {
+                    'Accept': 'application/json, text/plain, */*',
+                    'Content-Type': "application/json",
+                    'X_REQUESTED_WITH':"xmlhttprequest"
+                }
+            });
+            let data = await response.json();
+            let errors = data.errors;
+            if (errors.unknown !== undefined) {
+                unknowErrorEl.innerText += errors.unknown;
+                window.scrollTo(0,0);
+            } else {
+                this.topic.reload();
+            }
 
+        } catch (e) {
+            console.error('Chyba: ' + e.message);
+        }
     }
 
     async uploadComment(url, err_id, scrollTop = false) {
@@ -255,8 +278,8 @@ class Comment {
             });
             let data = await response.json();
             let errors = data.errors;
-            if (errors.unknow !== undefined) {
-                unknowErrorEl.innerText += errors.unknow;
+            if (errors.unknown !== undefined) {
+                unknowErrorEl.innerText += errors.unknown;
                 if(scrollTop === true) {
                     window.scrollTo(0,0);
                 }
@@ -278,6 +301,8 @@ class Comment {
 
     deleteHndl(i) {
         //console.log("delete tu" + i);
+        this.deletingId = i;
+        $('#deleteModal').modal('show');
     }
 
 
@@ -335,18 +360,6 @@ class Comment {
                         <p hidden id="${cid_commentID}">${comment.id}</p>
                         <div class="container mt-2">
                             <small id="${cid_topicTitle}">${topicTitle}</small> `;
-        if (comment.deleted === null) {
-            html += `<div class="votes_container" >
-                        <button class="button_icon">
-                            <i class="fa fa-caret-up"></i>
-                        </button>
-                        <i class="fa"></i>
-                        <span id="${cid_votes}">${comment.likes}</span>
-                        <button class="button_icon">
-                            <i class="fa fa-caret-down"></i>
-                        </button>
-                     </div>`;
-        }
         html += `</div>
                     </div>
                     <div class="row mt-2">
@@ -362,12 +375,12 @@ class Comment {
                         `;
         if((userId === comment.autor) && (comment.deleted === null))
         {
-            html += `<button class="crud_button btn_comment_action" id="editBtn_${i}">
+            html += `<div><button class="crud_button btn_no_border" id="editBtn_${i}">
                         <i class="fa fa-edit"></i>
                      </button>
-                     <button class="crud_button btn_comment_action" id="deleteBtn_${i}">
+                     <button class="crud_button btn_no_border" id="deleteBtn_${i}">
                         <i class="fa fa-trash"></i>
-                     </button>
+                     </button></div>
             `;
         }
         html += `</div> </div> </div> `;
@@ -381,12 +394,15 @@ class Comment {
             return true;
         }
         let cid_topicTitle = "topicTitle_" + i.toString();
-        let cid_votes = "votes_container_" + i.toString();
         let cid_text = "comment_text_" + i.toString();
         let cid_login = "comment_login_" + i.toString();
         let cid_created = "comment_created_" + i.toString();
+      /*  let el1 = document.getElementById(cid_topicTitle);
+        let el3 = document.getElementById(cid_text);
+        let el4 = document.getElementById(cid_login);
+        let el5 = document.getElementById(cid_created);*/
+
         if ((document.getElementById(cid_topicTitle).innerText.trim() !== topicTitle.trim()) ||
-            (document.getElementById(cid_votes).innerText.trim() !== comment.likes.trim()) ||
             (document.getElementById(cid_text).innerHTML.trim() !== comment.text.trim()) ||
             (document.getElementById(cid_login).innerText.trim() !== comment.login.trim()) ||
             (document.getElementById(cid_created).innerText.trim() !== comment.created.trim())) {

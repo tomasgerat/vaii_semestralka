@@ -52,6 +52,38 @@ class DbSelector
         }
     }
 
+    static  public function getAllCategoriesCntForUser($autor) : array
+    {
+        $sql =  "select (select count(*) from topic where category=0 and autor = ?) as computers,".
+            "(select count(*) from topic where category=1 and autor = ?) as games,".
+            "(select count(*) from topic where category=2 and autor = ?) as science,".
+            "(select count(*) from topic where category=3 and autor = ?) as movies,".
+            "(select count(*) from topic where category=4 and autor = ?) as music,".
+            "(select count(*) from topic where category=5 and autor = ?) as other";
+        $params = [$autor,$autor,$autor,$autor,$autor,$autor];
+        try {
+            return DbSelector::doQuery($sql, $params, "App\\Models\\DataModels\\TopicInCategoriesCnt");
+        } catch (\Exception $e) {
+            throw new \Exception('Query failed: ' . $e->getMessage());
+        }
+    }
+
+    static  public function getAllCategoriesCntForSearch($searchText) : array
+    {
+        $sql =  "select (select count(*) from topic where category=0 and text like ?) as computers,".
+            "(select count(*) from topic where category=1 and text like ?) as games,".
+            "(select count(*) from topic where category=2 and text like ?) as science,".
+            "(select count(*) from topic where category=3 and text like ?) as movies,".
+            "(select count(*) from topic where category=4 and text like ?) as music,".
+            "(select count(*) from topic where category=5 and text like ?) as other";
+        $params = [$searchText,$searchText,$searchText,$searchText,$searchText, $searchText];
+        try {
+            return DbSelector::doQuery($sql, $params, "App\\Models\\DataModels\\TopicInCategoriesCnt");
+        } catch (\Exception $e) {
+            throw new \Exception('Query failed: ' . $e->getMessage());
+        }
+    }
+
     /**
      *  $count = -1  vsetky zaznamy
      */
@@ -136,6 +168,35 @@ class DbSelector
     {
         $sql =  "SELECT DISTINCT count(*) as count FROM topic";
         $params = [];
+        try {
+            return DbSelector::doQuery($sql, $params, "App\\Models\\DataModels\\EntriesCount");
+        } catch (\Exception $e) {
+            throw new \Exception('Query failed: ' . $e->getMessage());
+        }
+    }
+
+    static  public function searchAllTopics($start, $count, $searchText) : array
+    {
+        $sql =  "SELECT DISTINCT *, (select count(*) from comment where tt.id = topic) as comments, " .
+            "(select login from user where tt.autor = id) as login FROM topic as tt " .
+            'where text like ? '.
+            'order by created desc'. ($count == -1 ? '' :  ' limit ?,?') ;
+        if($count == - 1)
+            $params = [];
+        else
+            $params = [$searchText, $start, $count];
+        try {
+            return DbSelector::doQuery($sql, $params, "App\\Models\\DataModels\\UserInTopic");
+        } catch (\Exception $e) {
+            throw new \Exception('Query failed: ' . $e->getMessage());
+        }
+    }
+
+    static public function countAllSearchedTopics($searchText) :array
+    {
+        $sql =  "SELECT DISTINCT count(*) as count FROM topic ".
+                'where text like ?';
+        $params = [ $searchText];
         try {
             return DbSelector::doQuery($sql, $params, "App\\Models\\DataModels\\EntriesCount");
         } catch (\Exception $e) {

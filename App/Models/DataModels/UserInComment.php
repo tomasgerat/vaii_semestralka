@@ -10,13 +10,12 @@ class UserInComment extends ADataModel
     public $text;
     public $created;
     public $edited;
-    public $likes;
     public $deleted;
     public $topic;
     public $autor;
     public $login;
     static public function setDbColumns()
     {
-        return ['id', 'text', 'created', 'edited', 'likes', 'deleted', 'topic', 'autor', 'login'];
+        return ['id', 'text', 'created', 'edited', 'deleted', 'topic', 'autor', 'login'];
     }
 }

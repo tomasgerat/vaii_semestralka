@@ -15,7 +15,7 @@ $topicId = isset($data["topic_id"]) ? "&id=".$data["topic_id"] : "";
 
 <div class="container mt-5 mb-3">
     <div class="row">
-        <?php echo Tools::getErrorDiv("unknow", $errors) ?>
+        <?php echo Tools::getErrorDiv("unknown", $errors) ?>
     </div>
     <div id="add_form_holder">
         <form class="info_form" action="?c=Topic&a=<?=$data['submit_action'].$topicId?>" method="post" autocomplete="off">

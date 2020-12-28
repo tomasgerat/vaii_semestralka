@@ -52,8 +52,10 @@ $active = isset($data["tabActive"]) ? $data["tabActive"] : "";
                         <i class="fa fa-sign-out-alt"></i></a>
                 </li>
             </ul>
-            <form class="form-inline ml-auto mt-2 my-lg-0">
-                <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+            <form class="form-inline ml-auto mt-2 my-lg-0" method="get" >
+                <input type="hidden" name="c" value="Content">
+                <input type="hidden" name="a" value="search">
+                <input class="form-control mr-sm-2" type="search" name="searchText" id="searchText" placeholder="Search" aria-label="Search">
                 <button class="btn btn-dark btn-outline-light my-2 my-sm-0" type="submit">Search</button>
             </form>
         </div>

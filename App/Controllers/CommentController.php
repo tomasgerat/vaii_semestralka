@@ -6,7 +6,6 @@ namespace App\Controllers;
 
 use App\Config\Configuration;
 use App\Core\AControllerBase;
-use App\Core\Responses\Response;
 use App\Models\Authentificator;
 use App\Models\Comment;
 use App\Models\DataModels\UserInComment;
@@ -33,7 +32,7 @@ class CommentController extends AControllerBase
                 $currentPage = isset($_GET['page']) ? $_GET['page'] : 0;
                 $comments = DbSelector::getAllCommentsWhereTopic($topic->getId(), $currentPage * 10, 10);
             } catch (\Exception $e) {
-                $errors["unknow"] = "Could not load Topic. " . (Configuration::DEBUG_EXCEPTIONS ? $e->getMessage() : "");
+                $errors["unknown"] = "Could not load Topic. " . (Configuration::DEBUG_EXCEPTIONS ? $e->getMessage() : "");
             }
             /** @var User $loggedUser */
             $loggedUser = Authentificator::getInstance()->getLoggedUser();
@@ -52,7 +51,7 @@ class CommentController extends AControllerBase
         } else {
             $bodyData = $this->request()->getBodyData();
             if (!isset($bodyData["text"]) || !Tools::checkIssetGet(["id"])) {
-                $errors["unknow"] = "Body data or ID not set.";
+                $errors["unknown"] = "Body data or topic ID not set.";
                 $data['errors'] = $errors;
                 return $this->json($data);
             }
@@ -65,14 +64,14 @@ class CommentController extends AControllerBase
                 $created = date('Y-m-d H:i:s');
                 $edited = $created;
                 $topicID = $_GET['id'];
-                $comment = new Comment($text, $created, $edited, 0, null, $topicID, $loggedUser->getId());
+                $comment = new Comment($text, $created, $edited, null, $topicID, $loggedUser->getId());
                 try {
                     $comment->save();
                 } catch (\Exception $e) {
-                    $errors["unknow"] = "Could not save Comment. " . (Configuration::DEBUG_EXCEPTIONS ? $e->getMessage() : "");
+                    $errors["unknown"] = "Could not save Comment. " . (Configuration::DEBUG_EXCEPTIONS ? $e->getMessage() : "");
                 }
             } else {
-                $errors["unknow"] = "Validation error.";
+                $errors["unknown"] = "Validation error.";
             }
             $data['errors'] = $errors;
         }
@@ -82,37 +81,36 @@ class CommentController extends AControllerBase
     public function edit()
     {
         $data = [];
+        $errors = [];
         if (!Authentificator::getInstance()->isLogged()) {
             return $this->json($data);
         } else {
             $bodyData = $this->request()->getBodyData();
             if (!isset($bodyData["text"]) || !Tools::checkIssetGet(["id"])) {
-                $errors["unknow"] = "Body data or ID not set.";
+                $errors["unknown"] = "Body data or ID not set.";
                 $data['errors'] = $errors;
                 return $this->json($data);
             }
             /** @var User $loggedUser */
             $loggedUser = Authentificator::getInstance()->getLoggedUser();
             $text = $bodyData["text"];
-
             $errors = $this->validateComment($text);
             if (count($errors) == 0) {
-                $edited = date('Y-m-d H:i:s');
                 $commentID = $_GET['id'];
                 try {
                     $comment = Comment::getOne($commentID);
-                    if($comment->getAutor() == $loggedUser->getId() && $comment->getDeleted() == null) {
-                        $comment->setEdited($edited);
+                    if ($comment->getAutor() == $loggedUser->getId() && $comment->getDeleted() == null) {
+                        $comment->setEdited(date('Y-m-d H:i:s'));
                         $comment->setText($text);
                         $comment->save();
                     } else {
-                        $errors["unknow"] = "Could not save Comment. Deleted or strange.";
+                        $errors["unknown"] = "Could not save Comment. Deleted or strange.";
                     }
                 } catch (\Exception $e) {
-                    $errors["unknow"] = "Could not save Comment. " . (Configuration::DEBUG_EXCEPTIONS ? $e->getMessage() : "");
+                    $errors["unknown"] = "Could not save Comment. " . (Configuration::DEBUG_EXCEPTIONS ? $e->getMessage() : "");
                 }
             } else {
-                $errors["unknow"] = "Validation error.";
+                $errors["unknown"] = "Validation error.";
             }
             $data['errors'] = $errors;
         }
@@ -121,15 +119,44 @@ class CommentController extends AControllerBase
 
     public function delete()
     {
-
+        $data = [];
+        $errors = [];
+        if (!Authentificator::getInstance()->isLogged()) {
+            return $this->json($data);
+        } else {
+            if (!Tools::checkIssetGet(["id"])) {
+                $errors["unknown"] = "ID not set.";
+                $data['errors'] = $errors;
+                return $this->json($data);
+            }
+            /** @var User $loggedUser */
+            $loggedUser = Authentificator::getInstance()->getLoggedUser();
+            $commentID = $_GET['id'];
+            try {
+                $comment = Comment::getOne($commentID);
+                if ($comment->getAutor() == $loggedUser->getId() && $comment->getDeleted() == null) {
+                    $comment->setEdited(date('Y-m-d H:i:s'));
+                    $comment->setDeleted(true);
+                    $comment->setText("<i>This comment was deleted</i>");
+                    $comment->save();
+                } else {
+                    $errors["unknown"] = "Could not delete Comment. Deleted or strange.";
+                }
+            } catch (\Exception $e) {
+                $errors["unknown"] = "Could not delete Comment. " . (Configuration::DEBUG_EXCEPTIONS ? $e->getMessage() : "");
+            }
+        }
+        $data['errors'] = $errors;
+        return $this->json($data);
     }
 
-    private function validateComment($text)
+    private
+    function validateComment($text)
     {
         $errors = [];
-        $textTrimmed = strip_tags(trim(str_replace("&nbsp;", " ",preg_replace('/\s\s+/', '', $text))));
+        $textTrimmed = strip_tags(trim(str_replace("&nbsp;", " ", preg_replace('/\s\s+/', '', $text))));
         if (strlen($textTrimmed) < 3 || strlen(str_replace(" ", "", $textTrimmed)) == 0) {
-            $errors["text"] = "Min text lenght is 3.";
+            $errors["text"] = "Min text length is 3.";
         }
         return $errors;
     }

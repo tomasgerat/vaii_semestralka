@@ -91,17 +91,23 @@ $user = $userObj->getLogin();
 /** @var \App\Models\DataModels\TopicInCategoriesCnt[] $categories */
 $categories = isset($data['categories']) ? $data['categories'][0] : null;
 $topics_count = isset($data['topics_count']) ? $data['topics_count'] : 0;
+$url = isset($data["url"]) ? $data["url"] : "?c=Content&a=home";
 ?>
+<script src="forum/public/js/Content.js" type="module"></script>
+
 <div class="container">
     <div class="row">
         <div class="d-none d-sm-block col-lg-8 col-md-8" id="top_navigation">
             <div class="navigation">
-                <?php echo Tools::getPaggination(ceil($topics_count / 10.0), $currentPage, "?c=Content&a=home") ?>
+                <?php echo Tools::getPaggination(ceil($topics_count / 10.0), $currentPage, $url) ?>
             </div>
         </div>
     </div>
     <div class="row">
-        <?php echo Tools::getErrorDiv("unknow", $errors) ?>
+        <?php echo Tools::getErrorDiv("unknown", $errors) ?>
+    </div>
+    <div class="row">
+        <?php echo Tools::getErrorDiv("delete", $errors) ?>
     </div>
     <div class="row">
         <div class="col-lg-8 col-md-8" id="topics_place">
@@ -114,9 +120,11 @@ $topics_count = isset($data['topics_count']) ? $data['topics_count'] : 0;
                     break;
                 }
                 $topic = $topics[$i];
+                $cid_topicID = "topicID_" . $i;
                 ?>
                 <div class="container topic_frame">
                     <div class="row">
+                        <p hidden id="<?= $cid_topicID ?>"><?= $topic->id ?></p>
                         <div class="container col-sm-10 col-12">
                             <div class="row ">
                                 <div class="col-sm-3 col-12 topic_info">
@@ -124,10 +132,11 @@ $topics_count = isset($data['topics_count']) ? $data['topics_count'] : 0;
                                     <div class="topic_author"><?= $topic->login ?></div>
                                     <?php if ($user == $topic->login) { ?>
                                         <div class="">
-                                            <a href="<?=
-                                            "?c=Topic&a=delete&id=" . $topic->id ?>" class="crud_button">
-                                                <i class="fa fa-trash"></i>
-                                            </a>
+                                            <?php if($topic->comments == 0) { ?>
+                                                <button class="crud_button btn_no_border" id="deleteBtn_<?= $i ?>">
+                                                    <i class="fa fa-trash"></i>
+                                                </button>
+                                            <?php } ?>
                                             <a href="<?=
                                             "?c=Topic&a=edit&id=" . $topic->id ?>" class="crud_button">
                                                 <i class="fa fa-edit"></i>
@@ -187,6 +196,7 @@ $topics_count = isset($data['topics_count']) ? $data['topics_count'] : 0;
                 <div class="line"></div>
                 <ul class="categories_list" id="stats_place">
                     <!-- Generovat podla databazy-->
+                    <!-- TODO a href linky dorobit????-->
                     <?php /** @var \App\Models\Categories[] $data */ ?>
                     <li><a href="#">Computers <span
                                 class="badge badge-secondary float-right"><?= $categories == null ? 0 : $categories->computers ?></span></a>
@@ -213,9 +223,13 @@ $topics_count = isset($data['topics_count']) ? $data['topics_count'] : 0;
     <div class="row">
         <div class="col-lg-8 col-md-8" id="bottom_navigation">
             <div class="navigation">
-                <?php echo \App\Models\Tools::getPaggination(ceil($topics_count / 10.0), $currentPage, "?c=Content&a=home") ?>
+                <?php echo \App\Models\Tools::getPaggination(ceil($topics_count / 10.0), $currentPage, $url) ?>
             </div>
         </div>
     </div>
 </div>
+
+<?php
+include dirname(__DIR__) . "/Common/delete_modal.php";
+?>
 </body>

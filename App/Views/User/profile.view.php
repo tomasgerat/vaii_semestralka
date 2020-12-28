@@ -18,7 +18,7 @@ $errors = isset($data["errors"]) ? $data["errors"] : [];
 
 <div class="container mt-5 mb-3">
     <div class="row">
-        <?php echo Tools::getErrorDiv("unknow", $errors) ?>
+        <?php echo Tools::getErrorDiv("unknown", $errors) ?>
     </div>
     <div class="row">
         <div class="container col-12 col-md-6 text-center">

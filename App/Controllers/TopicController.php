@@ -7,6 +7,7 @@ namespace App\Controllers;
 use App\Config\Configuration;
 use App\Core\AControllerBase;
 use App\Models\Authentificator;
+use App\Models\Comment;
 use App\Models\DataModels\UserInComment;
 use App\Models\DataModels\EntriesCount;
 use App\Models\DbSelector;
@@ -46,7 +47,7 @@ class TopicController extends AControllerBase
                 $data['comments'] = $comments;
                 $data["comments_count"] = $countObj[0]->count;
             } catch (\Exception $e) {
-                $errors["unknow"] = "Could not load Topic. " . (Configuration::DEBUG_EXCEPTIONS ? $e->getMessage() : "");
+                $errors["unknown"] = "Could not load Topic. " . (Configuration::DEBUG_EXCEPTIONS ? $e->getMessage() : "");
             }
             $data["errors"] = $errors;
             return $this->html($data, "index");
@@ -63,7 +64,7 @@ class TopicController extends AControllerBase
                 /** @var Topic $topic */
                 $topic = Topic::getOne($_GET['id']);
             } catch (\Exception $e) {
-                $errors["unknow"] = "Could not load Topic. " . (Configuration::DEBUG_EXCEPTIONS ? $e->getMessage() : "");
+                $errors["unknown"] = "Could not load Topic. " . (Configuration::DEBUG_EXCEPTIONS ? $e->getMessage() : "");
             }
             /** @var User $loggedUser */
             $loggedUser = Authentificator::getInstance()->getLoggedUser();
@@ -80,6 +81,7 @@ class TopicController extends AControllerBase
             return $this->json($data);
         } else {
             $errors = [];
+            $htmlPag = "";
             $currentPage = isset($_GET['page']) ? $_GET['page'] : 0;
             $url = "?c=Topic&a=index&id=";
             try {
@@ -91,7 +93,7 @@ class TopicController extends AControllerBase
                 $c = ceil((int)$c / 10.0);
                 $htmlPag = Tools::getPaggination($c, $currentPage, $url . $topic->getId());
             } catch (\Exception $e) {
-                $errors["unknow"] = "Could not create pagination. " . (Configuration::DEBUG_EXCEPTIONS ? $e->getMessage() : "");
+                $errors["unknown"] = "Could not create pagination. " . (Configuration::DEBUG_EXCEPTIONS ? $e->getMessage() : "");
             }
             /** @var User $loggedUser */
             $loggedUser = Authentificator::getInstance()->getLoggedUser();
@@ -132,7 +134,7 @@ class TopicController extends AControllerBase
                         $lastIndex = $topic->save();
                         return $this->redirect("?c=Topic&a=index&id=".$lastIndex);
                     } catch (\Exception $e) {
-                        $errors["unknow"] = "Could not save Topic. " . (Configuration::DEBUG_EXCEPTIONS ? $e->getMessage() : "");
+                        $errors["unknown"] = "Could not save Topic. " . (Configuration::DEBUG_EXCEPTIONS ? $e->getMessage() : "");
                     }
                 }
             } else {
@@ -162,7 +164,7 @@ class TopicController extends AControllerBase
             try {
                 $topic = Topic::getOne($_GET['id']);
             } catch (\Exception $e) {
-                $errors["unknow"] = "Could not load Topic. " . (Configuration::DEBUG_EXCEPTIONS ? $e->getMessage() : "");
+                $errors["unknown"] = "Could not load Topic. " . (Configuration::DEBUG_EXCEPTIONS ? $e->getMessage() : "");
                 $data["errors"] = $errors;
                 return $this->html($data, "edit");
             }
@@ -191,7 +193,7 @@ class TopicController extends AControllerBase
                         $lastIndex = $topic->save();
                         return $this->redirect("?c=Topic&a=index&id=".$lastIndex);
                     } catch (\Exception $e) {
-                        $errors["unknow"] = "Could not save Topic. " . (Configuration::DEBUG_EXCEPTIONS ? $e->getMessage() : "");
+                        $errors["unknown"] = "Could not save Topic. " . (Configuration::DEBUG_EXCEPTIONS ? $e->getMessage() : "");
                     }
                 }
             } else {
@@ -202,6 +204,46 @@ class TopicController extends AControllerBase
         }
     }
 
+    public function delete()
+    {
+        $data = [];
+        $errors = [];
+        if (!Authentificator::getInstance()->isLogged()) {
+            return $this->json($data);
+        } else {
+            if (!Tools::checkIssetGet(["id"])) {
+                $errors["unknown"] = "ID not set.";
+                $data['errors'] = $errors;
+                return $this->json($data);
+            }
+            /** @var User $loggedUser */
+            $loggedUser = Authentificator::getInstance()->getLoggedUser();
+            $topicID = $_GET['id'];
+            try {
+                $topic = Topic::getOne($topicID);
+                /** @var EntriesCount[] $comments_count_obj */
+                $comments_count_obj = DbSelector::countAllCommentsInTopic($topic->getId());
+                $count = $comments_count_obj[0]->count;
+                if ($topic->getAutor() == $loggedUser->getId() && $count == 0) {
+                    $topic->delete();
+                } else if(Authentificator::getInstance()->isAdminLogged()) {
+                    $comments = Comment::getAll('autor = ?',[$topic->getAutor()]);
+                    foreach ($comments as $comment) {
+                        $comment->delete();
+                    }
+                    $topic->delete();
+                } else {
+                    // TODO errorove polia tak aby sa zalamoval text v nich!
+                    $errors["unknown"] = "Could not delete Topic. Only admin can delete topic with comments.";
+                }
+            } catch (\Exception $e) {
+                $errors["unknown"] = "Could not delete Comment. " . (Configuration::DEBUG_EXCEPTIONS ? $e->getMessage() : "");
+            }
+        }
+        $data['errors'] = $errors;
+        return $this->json($data);
+    }
+
     private function validateTopic($title, $text, $category)
     {
         $errors = [];
@@ -210,7 +252,7 @@ class TopicController extends AControllerBase
         }
         $textTrimmed = strip_tags(trim(str_replace("&nbsp;", " ",preg_replace('/\s\s+/', '', $text))));
         if (strlen($textTrimmed) < 3 || strlen(str_replace(" ", "", $textTrimmed)) == 0) {
-            $errors["text"] = "Min text lenght is 3.";
+            $errors["text"] = "Min text length is 3.";
         }
         if ($category < 0 || $category > 5) {
             $errors["category"] = "Category is not valid.";

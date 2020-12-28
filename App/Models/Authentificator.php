@@ -56,4 +56,15 @@ class Authentificator
     {
         return (isset($_SESSION['user']) && $_SESSION['user'] != null);
     }
+
+    public function isAdminLogged() {
+        if(isset($_SESSION['user']) && $_SESSION['user'] != null) {
+            /** @var User $user */
+            $user = $this->getLoggedUser();
+            if($user->getLogin() == "admin") {
+                return true;
+            }
+        }
+        return false;
+    }
 }

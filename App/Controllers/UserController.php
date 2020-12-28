@@ -6,9 +6,7 @@ namespace App\Controllers;
 
 use App\Config\Configuration;
 use App\Core\AControllerBase;
-use App\Core\Responses\Response;
 use App\Models\Authentificator;
-use App\Models\DbSelector;
 use App\Models\Tools;
 use App\Models\User;
 
@@ -67,7 +65,7 @@ class UserController extends AControllerBase
                         $data["tabTitle"] = "Registered";
                         return $this->html($data, "registered");
                     } catch (\Exception $e) {
-                        $errors["unknow"] = "Could not save User. " . (Configuration::DEBUG_EXCEPTIONS ? $e->getMessage() : "");
+                        $errors["unknown"] = "Could not save User. " . (Configuration::DEBUG_EXCEPTIONS ? $e->getMessage() : "");
                     }
                 }
             } else {
@@ -113,7 +111,7 @@ class UserController extends AControllerBase
                         $data["success"] = "Profile updated successfully.";
                         return $this->html($data, "profile");
                     } catch (\Exception $e) {
-                        $errors["unknow"] = "Could not save User. " . (Configuration::DEBUG_EXCEPTIONS ? $e->getMessage() : "");
+                        $errors["unknown"] = "Could not save User. " . (Configuration::DEBUG_EXCEPTIONS ? $e->getMessage() : "");
                     }
                 }
             } else {
@@ -155,7 +153,7 @@ class UserController extends AControllerBase
                     $data["success"] = "Password changed successfully.";
                     return $this->html($data, "profile");
                 } catch (\Exception $e) {
-                    $errors["unknow"] = "Could not save User. " . (Configuration::DEBUG_EXCEPTIONS ? $e->getMessage() : "");
+                    $errors["unknown"] = "Could not save User. " . (Configuration::DEBUG_EXCEPTIONS ? $e->getMessage() : "");
                 }
             }
             $data["errors"] = $errors;
@@ -169,7 +167,7 @@ class UserController extends AControllerBase
         $errors = [];
         if (strlen($login) < 3 || strlen($login) > 30) {
             $errors["login"] = "Login lenght is between 3 and 30 chars.";
-        } else if (preg_match('/[\'^£$%&*()}{@#~?><>,|=_+¬-]/', $login)) {
+        } else if (preg_match('/[\'^£$%&*()}{@#~?><,|=_+¬-]/', $login)) {
             $errors["login"] = "Login can not contains special chars.";
         }
 
@@ -181,11 +179,11 @@ class UserController extends AControllerBase
             $errors["e_mail"] = "Invalid email format";
         }
 
-        if (strlen($first_name) > 0 && preg_match('/[\'^£$%&*()}{@#~?><>,|=_+¬-]/', $first_name)) {
+        if (strlen($first_name) > 0 && preg_match('/[\'^£$%&*()}{@#~?><,|=_+¬-]/', $first_name)) {
             $errors["first_name"] = "First name can not contains special chars.";
         }
 
-        if (strlen($last_name) > 0 && preg_match('/[\'^£$%&*()}{@#~?><>,|=_+¬-]/', $last_name)) {
+        if (strlen($last_name) > 0 && preg_match('/[\'^£$%&*()}{@#~?><,|=_+¬-]/', $last_name)) {
             $errors["last_name"] = "Last name can not contains special chars.";
         }
 
