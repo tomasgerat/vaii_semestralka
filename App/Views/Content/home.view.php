@@ -1,6 +1,7 @@
 <?php
 /** @var Array $data */
 
+use App\Models\Authentificator;
 use \App\Models\Tools;
 
 include dirname(__DIR__) . "../Common/header_logged.php";
@@ -92,6 +93,8 @@ $user = $userObj->getLogin();
 $categories = isset($data['categories']) ? $data['categories'][0] : null;
 $topics_count = isset($data['topics_count']) ? $data['topics_count'] : 0;
 $url = isset($data["url"]) ? $data["url"] : "?c=Content&a=home";
+$category_url = isset($data["category_url"]) ? $data["category_url"] : "?c=Content&a=home";
+$category = isset($data["category"]) ? $data["category"] : -1;
 ?>
 <script src="forum/public/js/Content.js" type="module"></script>
 
@@ -99,7 +102,7 @@ $url = isset($data["url"]) ? $data["url"] : "?c=Content&a=home";
     <div class="row">
         <div class="d-none d-sm-block col-lg-8 col-md-8" id="top_navigation">
             <div class="navigation">
-                <?php echo Tools::getPaggination(ceil($topics_count / 10.0), $currentPage, $url) ?>
+                <?php if($topics_count > 0) echo Tools::getPaggination(ceil($topics_count / 10.0), $currentPage, $url) ?>
             </div>
         </div>
     </div>
@@ -130,9 +133,9 @@ $url = isset($data["url"]) ? $data["url"] : "?c=Content&a=home";
                                 <div class="col-sm-3 col-12 topic_info">
                                     <div class="bold topic_category"> <?= $topic->getKategory() ?> </div>
                                     <div class="topic_author"><?= $topic->login ?></div>
-                                    <?php if ($user == $topic->login) { ?>
+                                    <?php if ($user == $topic->login || Authentificator::getInstance()->isAdminLogged()) { ?>
                                         <div class="">
-                                            <?php if($topic->comments == 0) { ?>
+                                            <?php if($topic->comments == 0 || Authentificator::getInstance()->isAdminLogged()) { ?>
                                                 <button class="crud_button btn_no_border" id="deleteBtn_<?= $i ?>">
                                                     <i class="fa fa-trash"></i>
                                                 </button>
@@ -198,23 +201,23 @@ $url = isset($data["url"]) ? $data["url"] : "?c=Content&a=home";
                     <!-- Generovat podla databazy-->
                     <!-- TODO a href linky dorobit????-->
                     <?php /** @var \App\Models\Categories[] $data */ ?>
-                    <li><a href="#">Computers <span
-                                class="badge badge-secondary float-right"><?= $categories == null ? 0 : $categories->computers ?></span></a>
+                    <li><a href="<?=$category_url."&category=0"?>">Computers <span
+                                class="badge <?=($category == 0 ? "badge-dark":"badge-secondary")?> float-right"><?= $categories == null ? 0 : $categories->computers ?></span></a>
                     </li>
-                    <li><a href="#">Games <span
-                                class="badge badge-secondary float-right"><?= $categories == null ? 0 : $categories->games ?></span></a>
+                    <li><a href="<?=$category_url."&category=1"?>">Games <span
+                                class="badge <?=($category == 1 ? "badge-dark":"badge-secondary")?> float-right"><?= $categories == null ? 0 : $categories->games ?></span></a>
                     </li>
-                    <li><a href="#">Science <span
-                                class="badge badge-secondary float-right"><?= $categories == null ? 0 : $categories->science ?></span></a>
+                    <li><a href="<?=$category_url."&category=2"?>">Science <span
+                                class="badge <?=($category == 2 ? "badge-dark":"badge-secondary")?> float-right"><?= $categories == null ? 0 : $categories->science ?></span></a>
                     </li>
-                    <li><a href="#">Movies <span
-                                class="badge badge-secondary float-right"><?= $categories == null ? 0 : $categories->movies ?></span></a>
+                    <li><a href="<?=$category_url."&category=3"?>">Movies <span
+                                class="badge <?=($category == 3 ? "badge-dark":"badge-secondary")?> float-right"><?= $categories == null ? 0 : $categories->movies ?></span></a>
                     </li>
-                    <li><a href="#">Music <span
-                                class="badge badge-secondary float-right"><?= $categories == null ? 0 : $categories->music ?></span></a>
+                    <li><a href="<?=$category_url."&category=4"?>">Music <span
+                                class="badge <?=($category == 4 ? "badge-dark":"badge-secondary")?> float-right"><?= $categories == null ? 0 : $categories->music ?></span></a>
                     </li>
-                    <li><a href="#">Other <span
-                                class="badge badge-secondary float-right"><?= $categories == null ? 0 : $categories->other ?></span></a>
+                    <li><a href="<?=$category_url."&category=5"?>">Other <span
+                                class="badge <?=($category == 5 ? "badge-dark":"badge-secondary")?> float-right"><?= $categories == null ? 0 : $categories->other ?></span></a>
                     </li>
                 </ul>
             </div>
@@ -223,7 +226,7 @@ $url = isset($data["url"]) ? $data["url"] : "?c=Content&a=home";
     <div class="row">
         <div class="col-lg-8 col-md-8" id="bottom_navigation">
             <div class="navigation">
-                <?php echo \App\Models\Tools::getPaggination(ceil($topics_count / 10.0), $currentPage, $url) ?>
+                <?php if($topics_count > 0) echo \App\Models\Tools::getPaggination(ceil($topics_count / 10.0), $currentPage, $url) ?>
             </div>
         </div>
     </div>

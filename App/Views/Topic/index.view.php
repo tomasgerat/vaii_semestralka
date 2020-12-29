@@ -69,10 +69,9 @@ $user = $userObj->getId();
                             <div class="comment_info">
                                 <span id="<?= $tid_created ?>"><?= $topic->getCreated() ?></span>
                                 <?php if ($user == $topic->getAutor()) { ?>
-                                    <a href="<?=
-                                    "?c=Topic&a=delete&id=" . $topic->getID() ?>" class="crud_button">
+                                    <button class="crud_button btn_no_border" id="deleteBtn_Topic">
                                         <i class="fa fa-trash"></i>
-                                    </a>
+                                    </button>
                                     <a href="<?=
                                     "?c=Topic&a=edit&id=" . $topic->getID() ?>" class="crud_button">
                                         <i class="fa fa-edit"></i>
@@ -119,7 +118,8 @@ $user = $userObj->getId();
                             <div class="bold topic_author" id="<?= $cid_login ?>"><?= $comment->login ?></div>
                             <div class="comment_info">
                                 <p id="<?= $cid_created ?>"><?= $comment->created ?></p>
-                                <?php if (($user == $comment->autor) && ($comment->deleted == 0)) { ?>
+                                <?php if (($user == $comment->autor || Authentificator::getInstance()->isAdminLogged())
+                                    && ($comment->deleted == 0)) { ?>
                                     <div>
                                         <button class="crud_button btn_no_border" id="editBtn_<?= $i ?>">
                                             <i class="fa fa-edit"></i>

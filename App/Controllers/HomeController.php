@@ -8,7 +8,9 @@ use App\Models\Authentificator;
 
 class HomeController extends AControllerBase
 {
-
+//TODO zmazat tento controller, v app nastavit default controler!
+//TODO validacia generovanych html stranok
+//TODO naplnit databazu dacim zmysluplnym
     public function index()
     {
         if(!Authentificator::getInstance()->isLogged()) {

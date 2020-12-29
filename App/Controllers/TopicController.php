@@ -177,30 +177,33 @@ class TopicController extends AControllerBase
             }
             if ($_POST['create'] == 1) {
                 /** @var User $loggedUser */
-                //$loggedUser = Authentificator::getInstance()->getLoggedUser();
+                $loggedUser = Authentificator::getInstance()->getLoggedUser();
                 $data["title"] = $title = $_POST["title"];
                 $data["text"] = $text = $_POST["text"];
                 $data["category"] = $category = $_POST["category"];
-
-                $errors = $this->validateTopic($title, $text, $category);
-                if(count($errors) == 0)
-                {
-                    $topic->setTitle($title);
-                    $topic->setText($text);
-                    $topic->setCategory($category);
-                    $topic->setEdited(date('Y-m-d H:i:s'));
-                    try {
-                        $lastIndex = $topic->save();
-                        return $this->redirect("?c=Topic&a=index&id=".$lastIndex);
-                    } catch (\Exception $e) {
-                        $errors["unknown"] = "Could not save Topic. " . (Configuration::DEBUG_EXCEPTIONS ? $e->getMessage() : "");
+                if ($topic->getAutor() == $loggedUser->getId()) {
+                    $errors = $this->validateTopic($title, $text, $category);
+                    if(count($errors) == 0)
+                    {
+                        $topic->setTitle($title);
+                        $topic->setText($text);
+                        $topic->setCategory($category);
+                        $topic->setEdited(date('Y-m-d H:i:s'));
+                        try {
+                            $lastIndex = $topic->save();
+                            return $this->redirect("?c=Topic&a=index&id=".$lastIndex);
+                        } catch (\Exception $e) {
+                            $errors["unknown"] = "Could not save Topic. " . (Configuration::DEBUG_EXCEPTIONS ? $e->getMessage() : "");
+                        }
                     }
+                } else {
+                    $errors["unknown"] = "Could not edit Topic.";
                 }
             } else {
                 return $this->redirect("?c=Topic&a=index&id=".$topic->getId());
             }
             $data["errors"] = $errors;
-            return $this->html($data, "add");
+            return $this->html($data, "edit");
         }
     }
 
@@ -227,7 +230,7 @@ class TopicController extends AControllerBase
                 if ($topic->getAutor() == $loggedUser->getId() && $count == 0) {
                     $topic->delete();
                 } else if(Authentificator::getInstance()->isAdminLogged()) {
-                    $comments = Comment::getAll('autor = ?',[$topic->getAutor()]);
+                    $comments = Comment::getAll('topic = ?',[$topic->getId()]);
                     foreach ($comments as $comment) {
                         $comment->delete();
                     }

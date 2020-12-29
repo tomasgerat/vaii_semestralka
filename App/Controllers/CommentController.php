@@ -37,6 +37,7 @@ class CommentController extends AControllerBase
             /** @var User $loggedUser */
             $loggedUser = Authentificator::getInstance()->getLoggedUser();
             $data["user"] = $loggedUser->getId();
+            $data["isAdmin"] = Authentificator::getInstance()->isAdminLogged();
             $data["errors"] = $errors;
             $data['comments'] = $comments;
             return $this->json($data);
@@ -134,7 +135,8 @@ class CommentController extends AControllerBase
             $commentID = $_GET['id'];
             try {
                 $comment = Comment::getOne($commentID);
-                if ($comment->getAutor() == $loggedUser->getId() && $comment->getDeleted() == null) {
+                if (($comment->getAutor() == $loggedUser->getId()
+                        || Authentificator::getInstance()->isAdminLogged()) && $comment->getDeleted() == null) {
                     $comment->setEdited(date('Y-m-d H:i:s'));
                     $comment->setDeleted(true);
                     $comment->setText("<i>This comment was deleted</i>");

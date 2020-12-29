@@ -117,17 +117,23 @@ class DbSelector
     /**
      *  $count = -1  vsetky zaznamy
      */
-    static  public function getAllTopicsWhereUser($autor, $start, $count) : array
+    static  public function getAllTopicsWhereUser($autor, $start, $count, $category = null) : array
     {
         $sql =  "SELECT DISTINCT *, (select count(*) from comment where tt.id = topic) as comments," .
             " (select login from user where tt.autor = id) as login FROM topic" .
-            " as tt where ( id in ".
-            " (SELECT DISTINCT topic from comment where autor = ? )) or (autor = ? ) " .
+            " as tt where (( id in ".
+            " (SELECT DISTINCT topic from comment where autor = ? )) or (autor = ? )) " .
+            ($category == null ? '' : 'and category = ? ' ) .
             'order by created desc'. ($count == -1 ? '' :  ' limit ?,?') ;
-        if($count == - 1)
-            $params = [ $autor, $autor ];
-        else
-            $params = [ $autor, $autor, $start, $count];
+
+        $params = [ $autor, $autor ];
+        if($category != null) {
+            $params[] = $category;
+        }
+        if($count != - 1) {
+            $params[] = $start;
+            $params[] = $count;
+        }
 
         try {
             return DbSelector::doQuery($sql, $params, "App\\Models\\DataModels\\UserInTopic");
@@ -136,11 +142,15 @@ class DbSelector
         }
     }
 
-    static  public function countAllTopicsWhereUser($autor) : array
+    static  public function countAllTopicsWhereUser($autor, $category = null) : array
     {
-        $sql =  "SELECT DISTINCT count(*) as count FROM topic where ( id in ".
-                        "(SELECT DISTINCT topic from comment where autor = ? )) or (autor = ? )";
-            $params = [ $autor, $autor ];
+        $sql =  "SELECT DISTINCT count(*) as count FROM topic where (( id in ".
+                        "(SELECT DISTINCT topic from comment where autor = ? )) or (autor = ? )) "
+                        .($category == null ? '' : 'and category = ? ' );
+        $params = [ $autor, $autor ];
+        if($category != null) {
+            $params[] = $category;
+        }
         try {
             return DbSelector::doQuery($sql, $params, "App\\Models\\DataModels\\EntriesCount");
         } catch (\Exception $e) {
@@ -148,15 +158,22 @@ class DbSelector
         }
     }
 
-    static  public function getAllTopics($start, $count) : array
+    static  public function getAllTopics($start, $count, $category = null) : array
     {
         $sql =  "SELECT DISTINCT *, (select count(*) from comment where tt.id = topic) as comments," .
-            " (select login from user where tt.autor = id) as login FROM topic" .
-            ' as tt order by created desc'. ($count == -1 ? '' :  ' limit ?,?') ;
-        if($count == - 1)
-            $params = [];
-        else
-            $params = [$start, $count];
+            " (select login from user where tt.autor = id) as login FROM topic as tt " .
+            ($category == null ? '' : 'where category = ? ' ) .
+            'order by created desc'. ($count == -1 ? '' :  ' limit ?,?') ;
+
+        $params = [];
+        if($category != null) {
+            $params[] = $category;
+        }
+        if($count != - 1) {
+            $params[] = $start;
+            $params[] = $count;
+        }
+
         try {
             return DbSelector::doQuery($sql, $params, "App\\Models\\DataModels\\UserInTopic");
         } catch (\Exception $e) {
@@ -164,10 +181,14 @@ class DbSelector
         }
     }
 
-    static  public function countAllTopics() : array
+    static  public function countAllTopics($category = null) : array
     {
-        $sql =  "SELECT DISTINCT count(*) as count FROM topic";
+        $sql =  "SELECT DISTINCT count(*) as count FROM topic " .
+                ($category == null ? '' : 'where category = ? ' );
         $params = [];
+        if($category != null) {
+            $params[] = $category;
+        }
         try {
             return DbSelector::doQuery($sql, $params, "App\\Models\\DataModels\\EntriesCount");
         } catch (\Exception $e) {
@@ -175,16 +196,21 @@ class DbSelector
         }
     }
 
-    static  public function searchAllTopics($start, $count, $searchText) : array
+    static  public function searchAllTopics($start, $count, $searchText, $category = null) : array
     {
         $sql =  "SELECT DISTINCT *, (select count(*) from comment where tt.id = topic) as comments, " .
             "(select login from user where tt.autor = id) as login FROM topic as tt " .
-            'where text like ? '.
+            'where text like ? '. ($category == null ? '' : 'and category = ? ' ) .
             'order by created desc'. ($count == -1 ? '' :  ' limit ?,?') ;
-        if($count == - 1)
-            $params = [];
-        else
-            $params = [$searchText, $start, $count];
+        $params[] = $searchText;
+        if($category != null) {
+            $params[] = $category;
+        }
+        if($count != - 1) {
+            $params[] = $start;
+            $params[] = $count;
+        }
+
         try {
             return DbSelector::doQuery($sql, $params, "App\\Models\\DataModels\\UserInTopic");
         } catch (\Exception $e) {
@@ -192,11 +218,14 @@ class DbSelector
         }
     }
 
-    static public function countAllSearchedTopics($searchText) :array
+    static public function countAllSearchedTopics($searchText, $category = null) :array
     {
         $sql =  "SELECT DISTINCT count(*) as count FROM topic ".
-                'where text like ?';
+                'where text like ? ' .($category == null ? '' : 'and category = ? ' );
         $params = [ $searchText];
+        if($category != null) {
+            $params[] = $category;
+        }
         try {
             return DbSelector::doQuery($sql, $params, "App\\Models\\DataModels\\EntriesCount");
         } catch (\Exception $e) {

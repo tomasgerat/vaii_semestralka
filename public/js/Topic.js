@@ -99,6 +99,7 @@ class Topic {
             let comments = data.comments;
             let errors = data.errors;
             let userId = data.user;
+            let isAdmin = data.isAdmin;
             let commentsEl = document.getElementById("comments_holder");
             let unknowErrorEl = document.getElementById("err_unknow");
             let topicTitleEl = document.getElementById("topic_title");
@@ -112,7 +113,7 @@ class Topic {
             let i = 0;
             comments.forEach((comment) => {
                 if(this.commentObj.isChanged(comment, i, topicTitle) === true) {
-                    html = this.commentObj.generateComment(comment, i, topicTitle, userId);
+                    html = this.commentObj.generateComment(comment, i, topicTitle, userId, isAdmin);
                     let commentEl = document.getElementById("comment_" + i.toString());
                     if(commentEl === null) {
                         let node = document.createElement("div");
@@ -347,7 +348,7 @@ class Comment {
         this.editCommentBtnsHolder.hidden = true;
     }
 
-    generateComment(comment, i, topicTitle, userId) {
+    generateComment(comment, i, topicTitle, userId, isAdmin) {
         console.log("generateComment "+ i.toString())
         let cid_commentID = "commentID_"+ i.toString();
         let cid_topicTitle = "topicTitle_" + i.toString();
@@ -373,7 +374,7 @@ class Comment {
                             <div class="comment_info">
                                 <p id="${cid_created}">${comment.created}</p>
                         `;
-        if((userId === comment.autor) && (comment.deleted === null))
+        if((userId === comment.autor || isAdmin === true) && (comment.deleted === null))
         {
             html += `<div><button class="crud_button btn_no_border" id="editBtn_${i}">
                         <i class="fa fa-edit"></i>

@@ -31,18 +31,27 @@ class ContentController extends AControllerBase
             $data["tabTitle"] = "Home";
             $data["tabCss"] = "main.css";
             $data["tabActive"] = "home";
-            $data["url"] = "?c=Content&a=home";
             $errors["unknown"] = "";
             $topics = null;
 
             /** @var User $user */
             $user = Authentificator::getInstance()->getLoggedUser();
+
+            $data["url"] = "?c=Content&a=home";
+            $data["category_url"] = "?c=Content&a=home";
+            $category = isset($_GET["category"]) ? $_GET["category"] : null;
+            if($category != null) {
+                $data["url"] .= ("&category=".$category);
+                $data["category"] = $category;
+            } else {
+                $data["category"] = -1;
+            }
             try {
                 $currentPage = isset($_GET['page']) ? $_GET['page'] : 0;
                 /** @var UserInTopic[] $topics */
-                $topics = DbSelector::getAllTopicsWhereUser($user->getId(), $currentPage * 10, 10 );
+                $topics = DbSelector::getAllTopicsWhereUser($user->getId(), $currentPage * 10, 10, $category);
                 /** @var EntriesCount $countObj */
-                $countObj = DbSelector::countAllTopicsWhereUser($user->getId());
+                $countObj = DbSelector::countAllTopicsWhereUser($user->getId(), $category);
                 /** @var TopicInCategoriesCnt[] $categories */
                 $categories = DbSelector::getAllCategoriesCntForUser($user->getId());
                 $data["topics"] = $topics;
@@ -65,18 +74,26 @@ class ContentController extends AControllerBase
             $data["tabTitle"] = "Recent";
             $data["tabCss"] = "main.css";
             $data["tabActive"] = "recent";
-            $data["url"] = "?c=Content&a=recent";
             $errors["unknown"] = "";
             $topics = null;
 
             /** @var User $user */
             //$user = Authentificator::getInstance()->getLoggedUser();
+            $data["url"] = "?c=Content&a=recent";
+            $data["category_url"] = "?c=Content&a=recent";
+            $category = isset($_GET["category"]) ? $_GET["category"] : null;
+            if($category != null) {
+                $data["url"] .= ("&category=".$category);
+                $data["category"] = $category;
+            } else {
+                $data["category"] = -1;
+            }
             try {
                 $currentPage = isset($_GET['page']) ? $_GET['page'] : 0;
                 /** @var UserInTopic[] $topics */
-                $topics = DbSelector::getAllTopics($currentPage * 10, 10 );
+                $topics = DbSelector::getAllTopics($currentPage * 10, 10, $category);
                 /** @var EntriesCount $countObj */
-                $countObj = DbSelector::countAllTopics();
+                $countObj = DbSelector::countAllTopics($category);
                 $categories = DbSelector::getAllCategoriesCnt();
                 $data["topics"] = $topics;
                 $data["categories"] = $categories;
@@ -105,15 +122,24 @@ class ContentController extends AControllerBase
                 return $this->redirect("?c=Content&a=recent");
             }
 
+
             $searchText =  "%".$_GET["searchText"]."%" ;
             $data["url"] = "?c=Content&a=search&searchText=".$_GET["searchText"];
+            $data["category_url"] = "?c=Content&a=search&searchText=".$_GET["searchText"];
+            $category = isset($_GET["category"]) ? $_GET["category"] : null;
+            if($category != null) {
+                $data["url"] .= ("&category=".$category);
+                $data["category"] = $category;
+            } else {
+                $data["category"] = -1;
+            }
 
             try {
                 $currentPage = isset($_GET['page']) ? $_GET['page'] : 0;
                 /** @var UserInTopic[] $topics */
-                $topics = DbSelector::searchAllTopics($currentPage * 10, 10, $searchText);
+                $topics = DbSelector::searchAllTopics($currentPage * 10, 10, $searchText, $category);
                 /** @var EntriesCount $countObj */
-                $countObj = DbSelector::countAllSearchedTopics($searchText);
+                $countObj = DbSelector::countAllSearchedTopics($searchText, $category);
                 $categories = DbSelector::getAllCategoriesCntForSearch($searchText);
                 $data["topics"] = $topics;
                 $data["categories"] = $categories;
