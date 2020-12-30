@@ -236,7 +236,6 @@ class TopicController extends AControllerBase
                     }
                     $topic->delete();
                 } else {
-                    // TODO errorove polia tak aby sa zalamoval text v nich!
                     $errors["unknown"] = "Could not delete Topic. Only admin can delete topic with comments.";
                 }
             } catch (\Exception $e) {

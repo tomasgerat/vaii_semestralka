@@ -105,3 +105,10 @@ body {
     background-color: transparent;
 }
 
+.error_text {
+    word-wrap: break-word;
+    padding-top: 15px;
+    padding-right: 15px;
+    padding-bottom: 15px;
+    padding-left: 15px;
+}

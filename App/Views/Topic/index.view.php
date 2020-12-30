@@ -36,6 +36,10 @@ $user = $userObj->getId();
         <?php echo Tools::getErrorDiv("edit", $errors) ?>
     </div>
     <div class="row">
+        <?php echo Tools::getErrorDiv("deleteTopic", $errors) ?>
+    </div>
+    <?php if ($topic != null) { ?>
+    <div class="row">
         <div class="d-none d-sm-block col-lg-8 col-md-8" id="top_navigation">
             <div class="navigation" id="top_nav">
                 <?php echo Tools::getPaggination(ceil($comments_count / 10.0), $currentPage, "?c=Topic&a=index&id=" . $topic->getId()) ?>
@@ -47,31 +51,35 @@ $user = $userObj->getId();
     $tid_text = "topic_text";
     $tid_login = "topic_login";
     $tid_created = "topic_created";
-    if ($topic != null) { ?>
-        <p hidden id="current_topic"><?= $topic->getId() ?></p>
-        <div class="row">
-            <div class="col-lg-12 col-md-12">
-                <div class="container topic_frame">
-                    <div class="row">
-                        <div class="container mt-2  topic_text" id="<?= $tid_title ?>">
-                            <h4><?= $topic->getTitle() ?></h4>
+    ?>
+    <p hidden id="current_topic"><?= $topic->getId() ?></p>
+    <div class="row">
+        <div class="col-lg-12 col-md-12">
+            <div class="container topic_frame">
+                <div class="row">
+                    <div class="container mt-2  topic_text" id="<?= $tid_title ?>">
+                        <h4><?= $topic->getTitle() ?></h4>
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-sm-9 col-12">
+                        <div class="container  topic_text" id="<?= $tid_text ?>">
+                            <?= $topic->getText() ?>
                         </div>
                     </div>
-                    <div class="row mt-2">
-                        <div class="col-sm-9 col-12">
-                            <div class="container  topic_text" id="<?= $tid_text ?>">
-                                <?= $topic->getText() ?>
-                            </div>
-                        </div>
-                        <div class="col-sm-3 col-12 topic_info">
-                            <div class="bold topic_author"
-                                 id="<?= $tid_login ?>"><?= ($topicAutor == null ? "@unknown@" : $topicAutor->getLogin()) ?></div>
-                            <div class="comment_info">
-                                <span id="<?= $tid_created ?>"><?= $topic->getCreated() ?></span>
-                                <?php if ($user == $topic->getAutor()) { ?>
+                    <div class="col-sm-3 col-12 topic_info">
+                        <div class="bold topic_author"
+                             id="<?= $tid_login ?>"><?= ($topicAutor == null ? "@unknown@" : $topicAutor->getLogin()) ?></div>
+                        <div class="comment_info">
+                            <p id="<?= $tid_created ?>"><?= $topic->getCreated() ?></p>
+                            <div class="mb-1">
+                                <?php if (($comments_count == 0 && $user == $topic->getAutor())
+                                    || (Authentificator::getInstance()->isAdminLogged())) { ?>
                                     <button class="crud_button btn_no_border" id="deleteBtn_Topic">
                                         <i class="fa fa-trash"></i>
                                     </button>
+                                <?php } ?>
+                                <?php if ($user == $topic->getAutor()) { ?>
                                     <a href="<?=
                                     "?c=Topic&a=edit&id=" . $topic->getID() ?>" class="crud_button">
                                         <i class="fa fa-edit"></i>
@@ -83,7 +91,7 @@ $user = $userObj->getId();
                 </div>
             </div>
         </div>
-    <?php } ?>
+    </div>
     <div class="row">
         <div class="col-lg-12 col-md-12" id="comments_holder">
             <!--Generovat podla databazy-->
@@ -118,17 +126,19 @@ $user = $userObj->getId();
                             <div class="bold topic_author" id="<?= $cid_login ?>"><?= $comment->login ?></div>
                             <div class="comment_info">
                                 <p id="<?= $cid_created ?>"><?= $comment->created ?></p>
-                                <?php if (($user == $comment->autor || Authentificator::getInstance()->isAdminLogged())
-                                    && ($comment->deleted == 0)) { ?>
-                                    <div>
+                                <div class="mb-1">
+                                    <?php if (($user == $comment->autor || Authentificator::getInstance()->isAdminLogged())
+                                        && ($comment->deleted == 0)) { ?>
                                         <button class="crud_button btn_no_border" id="editBtn_<?= $i ?>">
                                             <i class="fa fa-edit"></i>
                                         </button>
+                                    <?php } ?>
+                                    <?php if (($user == $comment->autor) && ($comment->deleted == 0)) { ?>
                                         <button class="crud_button btn_no_border" id="deleteBtn_<?= $i ?>">
                                             <i class="fa fa-trash"></i>
                                         </button>
-                                    </div>
-                                <?php } ?>
+                                    <?php } ?>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -138,20 +148,18 @@ $user = $userObj->getId();
             ?>
         </div>
     </div>
-    <?php if ($topic != null) { ?>
-        <div class="row">
-            <div class="container mt-3">
-                <!-- <form action="#" method="post" autocomplete="off"> -->
-                <div class="col-lg-12">
-                    <button type="submit" name="newComment" value="1" id="newCommentBtn"
-                            class=" mb-3 btn btn-lg btn-dark btn-outline-light float-right">
-                        New comment
-                    </button>
-                </div>
-                <!-- </form> -->
+    <div class="row">
+        <div class="container mt-3">
+            <!-- <form action="#" method="post" autocomplete="off"> -->
+            <div class="col-lg-12">
+                <button type="submit" name="newComment" value="1" id="newCommentBtn"
+                        class=" mb-3 btn btn-lg btn-dark btn-outline-light float-right">
+                    New comment
+                </button>
             </div>
+            <!-- </form> -->
         </div>
-    <?php } ?>
+    </div>
 
     <div class="row mb-3 ml-1 mr-1" id="editorHolder" hidden>
         <label for="text">Comment text:</label>
@@ -187,8 +195,17 @@ $user = $userObj->getId();
         </div>
     </div>
 </div>
-
+<?php } ?>
 <?php
+$dataDeleteModal["headline"] = "Delete comment";
+$dataDeleteModal["text"] = "Are you sure you want to permanently remove this comment?";
+$dataDeleteModal["deleteBtnId"] = "confirmedDeleteBtn";
+$dataDeleteModal["id"] = "deleteModal";
+include dirname(__DIR__) . "/Common/delete_modal.php";
+$dataDeleteModal["headline"] = "Delete topic";
+$dataDeleteModal["text"] = "Are you sure you want to permanently remove this topic?";
+$dataDeleteModal["deleteBtnId"] = "confirmedDeleteBtnTopic";
+$dataDeleteModal["id"] = "deleteModalTopic";
 include dirname(__DIR__) . "/Common/delete_modal.php";
 ?>
 </body>

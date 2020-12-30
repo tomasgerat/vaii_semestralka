@@ -34,7 +34,6 @@ $topicId = isset($data["topic_id"]) ? "&id=".$data["topic_id"] : "";
                 <label for="text">Topic text:</label>
                 <textarea id="text" name="text" required><?=$text?></textarea>
                 <?php echo Tools::getErrorDiv("text", $errors) ?>
-                <!-- creating a CKEditor instance called myeditor -->
                 <!--TODO premiestnit script -->
                 <script type="text/javascript">
                     //resize CKEditor with customised height and width

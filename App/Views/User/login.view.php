@@ -35,10 +35,6 @@ include "Common/header.php"
 
                 <input type="submit" name="submit" value="Login">
 
-                <label>
-                    <input type="checkbox" checked="checked" name="remember" id="remember"> Remember me
-                </label>
-
             </form>
         </div>
     </div>

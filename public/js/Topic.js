@@ -1,12 +1,20 @@
 //import {strip_tags} from "./locutus.js";
 
+import {Err} from "./Err.js";
+
 const RELOAD_INTERVAL = 10000;
+
 
 class Topic {
     constructor() {
         this.commentObj = new Comment(this);
        // this.reload();
         setInterval(() => this.reload(), RELOAD_INTERVAL);
+        let delBtnEl = document.getElementById('deleteBtn_Topic');
+        if(delBtnEl !== null)
+            delBtnEl.addEventListener("click",() => { this.deleteHndl() });
+        document.getElementById('confirmedDeleteBtnTopic').addEventListener("click",
+            () => { this.deleteTopic() });
     }
 
     reload() {
@@ -17,6 +25,39 @@ class Topic {
         this.loadTopic();
         this.loadPagination();
         this.loadComments();
+    }
+
+    deleteHndl() {
+        //console.log("delete tu" + i);
+        $('#deleteModalTopic').modal('show');
+    }
+
+    async deleteTopic() {
+        $('#deleteModalTopic').modal('hide');
+        Err.setText("err_deleteTopic", "");
+        let t_id = document.getElementById("current_topic").innerText.trim();
+        console.log("Deleting topic t_id: " + t_id);
+        try{
+            let response = await fetch("?c=Topic&a=delete&id=" + t_id, {
+                method: 'POST', // or 'PUT'
+                headers: {
+                    'Accept': 'application/json, text/plain, */*',
+                    'Content-Type': "application/json",
+                    'X_REQUESTED_WITH':"xmlhttprequest"
+                }
+            });
+            let data = await response.json();
+            let errors = data.errors;
+            if (errors.unknown !== undefined) {
+                Err.setText("err_deleteTopic", errors.unknown);
+                window.scrollTo(0,0);
+            } else {
+                window.location.href = "?c=Content&a=home";
+            }
+
+        } catch (e) {
+            console.error('Chyba: ' + e.message);
+        }
     }
 
     async loadTopic() {
@@ -149,41 +190,55 @@ class Comment {
         this.topic = topic;
         this.editingId = -1;
         this.deletingId = -1;
-        CKEDITOR.replace('text',{
-                toolbar :
-                    [
-                        ['Bold','Italic','Underline','Strike', 'Subscript','Superscript'],
-                        ['Undo','Redo'],
-                        ['Link'],
-                        ['Format']
-                    ],
-                width: "100%",
-                height: "200px"
-            }
-        );
-        this.editor = CKEDITOR.instances.text;
-        this.errEditorEl = document.getElementById("err_text");
-        this.editorHolderEl = document.getElementById("editorHolder");
-        this.createCommentBtnsHolder = document.getElementById("createComment_btns");
-        this.editCommentBtnsHolder = document.getElementById("editComment_btns");
-       // document.getElementById("text");
-        this.newCommentBtn = document.getElementById("newCommentBtn");
+        if(document.getElementById('text') !== null) {
+            CKEDITOR.replace('text', {
+                    toolbar:
+                        [
+                            ['Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript'],
+                            ['Undo', 'Redo'],
+                            ['Link'],
+                            ['Format']
+                        ],
+                    width: "100%",
+                    height: "200px"
+                }
+            );
+            this.editor = CKEDITOR.instances.text;
+            this.errEditorEl = document.getElementById("err_text");
+            this.editorHolderEl = document.getElementById("editorHolder");
+            this.createCommentBtnsHolder = document.getElementById("createComment_btns");
+            this.editCommentBtnsHolder = document.getElementById("editComment_btns");
+            // document.getElementById("text");
+            this.newCommentBtn = document.getElementById("newCommentBtn");
 
-        document.getElementById('newCommentBtn').addEventListener("click",
-            () => { this.showEditorCreate() });
-        document.getElementById('sendBtn').addEventListener("click",
-            () => { this.sendComment() });
-        document.getElementById('cancelBtn').addEventListener("click",
-            () => { this.hideEditorCreate() });
-        document.getElementById('saveBtn').addEventListener("click",
-            () => { this.editComment() });
-        document.getElementById('cancelEditBtn').addEventListener("click",
-            () => { this.hideEditorEdit() });
-        document.getElementById('confirmedDeleteBtn').addEventListener("click",
-            () => { this.deleteComment() });
-        for (let i = 0; i < 10; i++) {
-            this.addEditBtnHandler(i);
-            this.addDeleteBtnHandle(i);
+            document.getElementById('newCommentBtn').addEventListener("click",
+                () => {
+                    this.showEditorCreate()
+                });
+            document.getElementById('sendBtn').addEventListener("click",
+                () => {
+                    this.sendComment()
+                });
+            document.getElementById('cancelBtn').addEventListener("click",
+                () => {
+                    this.hideEditorCreate()
+                });
+            document.getElementById('saveBtn').addEventListener("click",
+                () => {
+                    this.editComment()
+                });
+            document.getElementById('cancelEditBtn').addEventListener("click",
+                () => {
+                    this.hideEditorEdit()
+                });
+            document.getElementById('confirmedDeleteBtn').addEventListener("click",
+                () => {
+                    this.deleteComment()
+                });
+            for (let i = 0; i < 10; i++) {
+                this.addEditBtnHandler(i);
+                this.addDeleteBtnHandle(i);
+            }
         }
     }
 
@@ -208,7 +263,7 @@ class Comment {
         if (current_topic == null)
             return;
         console.log("Creating comment");
-        this.uploadComment("?c=Comment&a=add&id=" + current_topic, "err_text");
+        this.uploadComment("?c=Comment&a=add&id=" + current_topic, "err_edit");
     }
 
     editComment() {
@@ -220,8 +275,7 @@ class Comment {
 
     async deleteComment() {
         $('#deleteModal').modal('hide');
-        let unknowErrorEl = document.getElementById("err_edit");
-        unknowErrorEl.innerText = "";
+        Err.setText("err_edit", "");
         let c_id = document.getElementById("commentID_" + this.deletingId.toString()).innerText.trim();
         console.log("Deleting comment " + this.deletingId + " c_id: " + c_id);
         try{
@@ -236,7 +290,7 @@ class Comment {
             let data = await response.json();
             let errors = data.errors;
             if (errors.unknown !== undefined) {
-                unknowErrorEl.innerText += errors.unknown;
+                Err.setText("err_edit", errors.unknown);
                 window.scrollTo(0,0);
             } else {
                 this.topic.reload();
@@ -249,8 +303,7 @@ class Comment {
 
     async uploadComment(url, err_id, scrollTop = false) {
         try {
-            let unknowErrorEl = document.getElementById(err_id);
-            unknowErrorEl.innerText = "";
+            Err.setText(err_id, "");
 
             let commentData = this.editor.getData();
             //var nbsp = new RegExp(String.fromCharCode(160), "g");
@@ -280,7 +333,7 @@ class Comment {
             let data = await response.json();
             let errors = data.errors;
             if (errors.unknown !== undefined) {
-                unknowErrorEl.innerText += errors.unknown;
+                Err.setText(err_id, errors.unknown);
                 if(scrollTop === true) {
                     window.scrollTo(0,0);
                 }
@@ -309,7 +362,7 @@ class Comment {
 
 
     showEditorEdit() {
-        document.getElementById("err_edit").innerText = "";
+        Err.setText("err_edit", "");
         this.editor.setData("");
         this.errEditorEl.innerText = "";
         this.editorHolderEl.hidden = false;
@@ -329,7 +382,7 @@ class Comment {
     }
 
     showEditorCreate() {
-        document.getElementById("err_edit").innerText = "";
+        Err.setText("err_edit", "");
         this.editor.setData("");
         this.errEditorEl.innerText = "";
         this.editorHolderEl.hidden = false;
@@ -374,16 +427,20 @@ class Comment {
                             <div class="comment_info">
                                 <p id="${cid_created}">${comment.created}</p>
                         `;
+        html += `<div class="mb-1">`;
         if((userId === comment.autor || isAdmin === true) && (comment.deleted === null))
         {
-            html += `<div><button class="crud_button btn_no_border" id="editBtn_${i}">
+            html += `<button class="crud_button btn_no_border" id="editBtn_${i}">
                         <i class="fa fa-edit"></i>
-                     </button>
-                     <button class="crud_button btn_no_border" id="deleteBtn_${i}">
-                        <i class="fa fa-trash"></i>
-                     </button></div>
-            `;
+                     </button>`;
         }
+        if((userId === comment.autor) && (comment.deleted === null))
+        {
+            html += `<button class="crud_button btn_no_border" id="deleteBtn_${i}">
+                        <i class="fa fa-trash"></i>
+                     </button></div>`;
+        }
+        html += `</div>`;
         html += `</div> </div> </div> `;
         return html;
     }
@@ -420,6 +477,21 @@ class App {
 
     onDocumentLoad() {
         this.topic = new Topic();
+        this.unknowErrEl = document.getElementById("err_unknown");
+        this.editErrEl = document.getElementById("err_edit");
+        this.deleteErrEl = document.getElementById("err_deleteTopic");
+        if(this.unknowErrEl!==null) {
+            if (this.unknowErrEl.innerText.trim().length === 0)
+                this.unknowErrEl.hidden = true;
+        }
+        if(this.editErrEl!==null) {
+            if (this.editErrEl.innerText.trim().length === 0)
+                this.editErrEl.hidden = true;
+        }
+        if(this.deleteErrEl!==null) {
+            if (this.deleteErrEl.innerText.trim().length === 0)
+                this.deleteErrEl.hidden = true;
+        }
     }
 }
 

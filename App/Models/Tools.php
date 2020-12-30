@@ -32,7 +32,7 @@ class Tools
 
     public static function getErrorDiv($key, $errors): string
     {
-        $result = '<div class="text text-danger mb-3" id="' . 'err_' . $key . '" name="' . $key . '">';
+        $result = '<div class="text text-danger mb-3 error_text" id="' . 'err_' . $key . '" name="' . $key . '">';
         if (isset($errors[$key])) {
             $result = $result . $errors[$key];
         }

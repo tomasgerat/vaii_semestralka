@@ -1,3 +1,4 @@
+import {Err} from "./Err.js";
 
 class Topic {
     constructor() {
@@ -11,12 +12,11 @@ class Topic {
 
     async deleteTopic() {
         $('#deleteModal').modal('hide');
-        let unknowErrorEl = document.getElementById("err_delete");
-        unknowErrorEl.innerText = "";
-        let c_id = document.getElementById("topicID_" + this.deletingId.toString()).innerText.trim();
-        console.log("Deleting comment " + this.deletingId + " c_id: " + c_id);
+        Err.setText("err_delete", "");
+        let t_id = document.getElementById("topicID_" + this.deletingId.toString()).innerText.trim();
+        console.log("Deleting topic " + this.deletingId + " t_id: " + t_id);
         try{
-            let response = await fetch("?c=Topic&a=delete&id=" + c_id, {
+            let response = await fetch("?c=Topic&a=delete&id=" + t_id, {
                 method: 'POST', // or 'PUT'
                 headers: {
                     'Accept': 'application/json, text/plain, */*',
@@ -27,7 +27,8 @@ class Topic {
             let data = await response.json();
             let errors = data.errors;
             if (errors.unknown !== undefined) {
-                unknowErrorEl.innerText += errors.unknown;
+
+                Err.setText("err_delete", errors.unknown);
                 window.scrollTo(0,0);
             } else {
                 location.reload();
@@ -60,6 +61,17 @@ class App {
 
     onDocumentLoad() {
         this.topic = new Topic();
+
+        this.unknowErrEl = document.getElementById("err_unknown");
+        this.deleteErrEl = document.getElementById("err_delete");
+        if(this.unknowErrEl!==null) {
+            if (this.unknowErrEl.innerText.trim().length === 0)
+                this.unknowErrEl.hidden = true;
+        }
+        if(this.deleteErrEl!==null) {
+            if (this.deleteErrEl.innerText.trim().length === 0)
+                this.deleteErrEl.hidden = true;
+        }
     }
 
 }

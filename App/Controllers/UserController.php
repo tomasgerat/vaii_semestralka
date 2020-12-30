@@ -22,7 +22,7 @@ class UserController extends AControllerBase
     {
         $data = [];
         $data["tabTitle"] = "Login";
-        if (!Tools::checkIssetPost(["submit", "login", "password", "remember"])) {
+        if (!Tools::checkIssetPost(["submit", "login", "password"])) {
             return $this->html($data, "login");
         }
 
@@ -32,7 +32,6 @@ class UserController extends AControllerBase
             $data = ["error" => "Wrong login or password!"];
             return $this->html($data, "login");
         }
-        //TODO zapamatat si ma, remember me checkbox
     }
 
     public function logout()
@@ -43,8 +42,6 @@ class UserController extends AControllerBase
 
     public function register()
     {
-        //TODO kontrola ci su hesla rovnake, cez javascript a disable/enable submit button
-        //TODO ajax na realtime kontrolu ci uzivatelske meno,email uz neexistuje
         $data = [];
         $data["tabTitle"] = "Register";
         if (!Tools::checkIssetPost(["submit", "login", "password", "e_mail"])) {
@@ -125,7 +122,6 @@ class UserController extends AControllerBase
 
     public function change_password()
     {
-        //TODO kontrola ci su hesla rovnake, cez javascript a disable/enable submit button
         if (!Authentificator::getInstance()->isLogged()) {
             return $this->redirect("?c=User&a=login");
         } else {
