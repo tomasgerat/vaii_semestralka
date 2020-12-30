@@ -12,7 +12,7 @@ include "common/header.php";
         </div>
     </div>
     <div class="row">
-        <img id="bye_img" src="forum/public/img/bye.png">
+        <img id="bye_img" src="forum/public/img/bye.png" alt="bye">
     </div>
     <div class="row">
         <div class="container col-sm-12 col-md-5 mb-5 instructions">

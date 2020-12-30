@@ -32,7 +32,7 @@ class Tools
 
     public static function getErrorDiv($key, $errors): string
     {
-        $result = '<div class="text text-danger mb-3 error_text" id="' . 'err_' . $key . '" name="' . $key . '">';
+        $result = '<div class="text text-danger mb-3 error_text" id="' . 'err_' . $key . /*'" name="' . 'err_' . $key .*/ '">';
         if (isset($errors[$key])) {
             $result = $result . $errors[$key];
         }
@@ -40,7 +40,7 @@ class Tools
         return $result;
     }
 
-    public static function getPaggination($pagesCount, $currentPage, $url)
+    public static function getPaggination($pagesCount, $currentPage, $url, $currentPageId = "current_page")
     {
         if($pagesCount == 0)
             $pagesCount = 1;
@@ -94,7 +94,7 @@ class Tools
             ($page + 1 >= $pagesCount ? "#" : $url . "&page=" . ($page + 1)) .
             '" class="navigation_angle mt-1"> <i class="fa fa-angle-right"></i> </a> </div>';
 
-        $paggination .= '<p hidden id="current_page">'.$currentPage.'</p>';
+        $paggination .= '<p hidden id="'.$currentPageId.'">'.$currentPage.'</p>';
         return $paggination;
     }
 }

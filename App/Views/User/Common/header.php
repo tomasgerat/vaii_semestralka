@@ -21,7 +21,7 @@
 <body>
     <div class="container">
         <nav class="navbar navbar-expand-md navbar-light custom_navbar">
-            <a class="navbar-brand" href="?c=Home&a=index">
+            <a class="navbar-brand" href="?c=Content&a=home">
                 <img src="forum/public/img/F.png" id="img_logo" alt="">
             </a>
 

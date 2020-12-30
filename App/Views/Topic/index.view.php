@@ -42,7 +42,7 @@ $user = $userObj->getId();
     <div class="row">
         <div class="d-none d-sm-block col-lg-8 col-md-8" id="top_navigation">
             <div class="navigation" id="top_nav">
-                <?php echo Tools::getPaggination(ceil($comments_count / 10.0), $currentPage, "?c=Topic&a=index&id=" . $topic->getId()) ?>
+                <?php echo Tools::getPaggination(ceil($comments_count / 10.0), $currentPage, "?c=Topic&a=index&id=" . $topic->getId(), "current_page_top") ?>
             </div>
         </div>
     </div>
@@ -127,13 +127,13 @@ $user = $userObj->getId();
                             <div class="comment_info">
                                 <p id="<?= $cid_created ?>"><?= $comment->created ?></p>
                                 <div class="mb-1">
-                                    <?php if (($user == $comment->autor || Authentificator::getInstance()->isAdminLogged())
-                                        && ($comment->deleted == 0)) { ?>
+                                    <?php if (($user == $comment->autor) && ($comment->deleted == 0)) { ?>
                                         <button class="crud_button btn_no_border" id="editBtn_<?= $i ?>">
                                             <i class="fa fa-edit"></i>
                                         </button>
                                     <?php } ?>
-                                    <?php if (($user == $comment->autor) && ($comment->deleted == 0)) { ?>
+                                    <?php if (($user == $comment->autor || Authentificator::getInstance()->isAdminLogged())
+                                        && ($comment->deleted == 0)) { ?>
                                         <button class="crud_button btn_no_border" id="deleteBtn_<?= $i ?>">
                                             <i class="fa fa-trash"></i>
                                         </button>
@@ -190,7 +190,7 @@ $user = $userObj->getId();
     <div class="row">
         <div class="col-lg-8 col-md-8" id="bottom_navigation">
             <div class="navigation" id="bottom_nav">
-                <?php echo Tools::getPaggination(ceil($comments_count / 10.0), $currentPage, "?c=Topic&a=index&id=" . $topic->getId()) ?>
+                <?php echo Tools::getPaggination(ceil($comments_count / 10.0), $currentPage, "?c=Topic&a=index&id=" . $topic->getId(), "current_page_bottom") ?>
             </div>
         </div>
     </div>

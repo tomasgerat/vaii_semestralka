@@ -54,13 +54,20 @@ class DbSelector
 
     static  public function getAllCategoriesCntForUser($autor) : array
     {
-        $sql =  "select (select count(*) from topic where category=0 and autor = ?) as computers,".
-            "(select count(*) from topic where category=1 and autor = ?) as games,".
-            "(select count(*) from topic where category=2 and autor = ?) as science,".
-            "(select count(*) from topic where category=3 and autor = ?) as movies,".
-            "(select count(*) from topic where category=4 and autor = ?) as music,".
-            "(select count(*) from topic where category=5 and autor = ?) as other";
-        $params = [$autor,$autor,$autor,$autor,$autor,$autor];
+        $sql =  "select (select count(*) from topic where category=0 and (( id in ".
+            " (SELECT DISTINCT topic from comment where autor = ? )) or (autor = ? ))) as computers,".
+            "(select count(*) from topic where category=1 and (( id in ".
+            " (SELECT DISTINCT topic from comment where autor = ? )) or (autor = ? ))) as games,".
+            "(select count(*) from topic where category=2 and (( id in ".
+            " (SELECT DISTINCT topic from comment where autor = ? )) or (autor = ? ))) as science,".
+            "(select count(*) from topic where category=3 and (( id in ".
+            " (SELECT DISTINCT topic from comment where autor = ? )) or (autor = ? ))) as movies,".
+            "(select count(*) from topic where category=4 and (( id in ".
+            " (SELECT DISTINCT topic from comment where autor = ? )) or (autor = ? ))) as music,".
+            "(select count(*) from topic where category=5 and (( id in ".
+            " (SELECT DISTINCT topic from comment where autor = ? )) or (autor = ? ))) as other";
+        $params = [$autor,$autor,$autor,$autor,$autor,$autor,
+                    $autor,$autor,$autor,$autor,$autor,$autor];
         try {
             return DbSelector::doQuery($sql, $params, "App\\Models\\DataModels\\TopicInCategoriesCnt");
         } catch (\Exception $e) {

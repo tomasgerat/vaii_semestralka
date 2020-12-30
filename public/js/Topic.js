@@ -91,7 +91,7 @@ class Topic {
 
     async loadPagination() {
         try {
-            let current_pageEL = document.getElementById("current_page");
+            let current_pageEL = document.getElementById("current_page_bottom");
             let current_page = 0;
             if(current_pageEL !== null)
                 current_page = current_pageEL.innerText;
@@ -110,12 +110,14 @@ class Topic {
             if (errors.unknown !== undefined) {
                 unknowErrorEl.innerText += errors.unknown;
             }
+            let paginationHtmlTop = paginationHtml.replace("current_page","current_page_top");
+            let paginationHtmlBottom = paginationHtml.replace("current_page","current_page_bottom");
             let pagTop = document.getElementById("top_nav");
             let pagBottom = document.getElementById("bottom_nav");
-            if(pagTop.innerText.trim() !== paginationHtml.trim())
-                pagTop.innerHTML = paginationHtml;
-            if(pagBottom.innerText.trim() !== paginationHtml.trim())
-                pagBottom.innerHTML = paginationHtml;
+            if(pagTop.innerText.trim() !== paginationHtmlTop.trim())
+                pagTop.innerHTML = paginationHtmlTop;
+            if(pagBottom.innerText.trim() !== paginationHtmlBottom.trim())
+                pagBottom.innerHTML = paginationHtmlBottom;
         } catch (e) {
             console.error('Chyba: ' + e.message);
         }
@@ -123,7 +125,7 @@ class Topic {
 
     async loadComments() {
         try {
-            let current_pageEL = document.getElementById("current_page");
+            let current_pageEL = document.getElementById("current_page_bottom");
             let current_page = 0;
             if(current_pageEL !== null)
                 current_page = current_pageEL.innerText;
@@ -428,13 +430,13 @@ class Comment {
                                 <p id="${cid_created}">${comment.created}</p>
                         `;
         html += `<div class="mb-1">`;
-        if((userId === comment.autor || isAdmin === true) && (comment.deleted === null))
+        if((userId === comment.autor) && (comment.deleted === null))
         {
             html += `<button class="crud_button btn_no_border" id="editBtn_${i}">
                         <i class="fa fa-edit"></i>
                      </button>`;
         }
-        if((userId === comment.autor) && (comment.deleted === null))
+        if((userId === comment.autor || isAdmin === true) && (comment.deleted === null))
         {
             html += `<button class="crud_button btn_no_border" id="deleteBtn_${i}">
                         <i class="fa fa-trash"></i>

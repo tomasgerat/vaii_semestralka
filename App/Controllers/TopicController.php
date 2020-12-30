@@ -37,7 +37,8 @@ class TopicController extends AControllerBase
                 $currentPage = isset($_GET['page']) ? $_GET['page'] : 0;
                 /** @var UserInComment[] $topics */
                 $comments = DbSelector::getAllCommentsWhereTopic($topic->getId(), $currentPage * 10, 10 );
-                $topic->setViews($topic->getViews() + 1);
+                if(!isset($_GET['page']))
+                    $topic->setViews($topic->getViews() + 1);
                 $topic->save();
 
                 /** @var EntriesCount $countObj */
@@ -91,7 +92,7 @@ class TopicController extends AControllerBase
                 $countObj = DbSelector::countAllCommentsInTopic($topic->getId());
                 $c = $countObj[0]->count;
                 $c = ceil((int)$c / 10.0);
-                $htmlPag = Tools::getPaggination($c, $currentPage, $url . $topic->getId());
+                $htmlPag = Tools::getPaggination($c, $currentPage, $url . $topic->getId(), "current_page");
             } catch (\Exception $e) {
                 $errors["unknown"] = "Could not create pagination. " . (Configuration::DEBUG_EXCEPTIONS ? $e->getMessage() : "");
             }

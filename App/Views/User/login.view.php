@@ -27,7 +27,7 @@ include "Common/header.php"
     <div class="row">
         <div class="col-sm-12">
             <form class="login_form" action="?c=User&a=login" method="post">
-                <label for="username">Username</label>
+                <label for="login">Username</label>
                 <input type="text" placeholder="Enter login" name="login" id="login" required>
 
                 <label for="password">Password</label>

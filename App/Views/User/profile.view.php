@@ -23,10 +23,12 @@ $errors = isset($data["errors"]) ? $data["errors"] : [];
     </div>
     <div class="row">
         <div class="container col-12 col-md-6 text-center">
-            <div class="text-center text-dark mb-5" id="success" name="success">
+            <div class="text-center text-dark mb-5" id="success">
+                <?php if (isset($data["success"])) { ?>
                 <h5>
-                    <?php if (isset($data["success"])) echo $data["success"] ?>
+                     <?php echo $data["success"] ?>
                 </h5>
+                <?php } ?>
             </div>
         </div>
     </div>
@@ -95,10 +97,10 @@ $errors = isset($data["errors"]) ? $data["errors"] : [];
                     <?php echo Tools::getErrorDiv("password", $errors) ?>
                     <div class="row mb-3">
                         <div class="col-md-4">
-                            <label for="confirm_pass">Confirm password:</label>
+                            <label for="confirmPass">Confirm password:</label>
                         </div>
                         <div class="col-md-8">
-                            <input type="password" class="form-control" id="confirmPass" name="confirm_pass" value="" required>
+                            <input type="password" class="form-control" id="confirmPass" name="confirmPass" value="" required>
                         </div>
                     </div>
                     <?php echo Tools::getErrorDiv("confirmPass", $errors) ?>
@@ -110,4 +112,4 @@ $errors = isset($data["errors"]) ? $data["errors"] : [];
         </div>
     </div>
 </div>
-</body?
+</body>

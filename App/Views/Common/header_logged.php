@@ -48,7 +48,7 @@ $active = isset($data["tabActive"]) ? $data["tabActive"] : "";
                         <i class="fa fa-user"></i> Profile</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link only_icon" href="?c=User&a=logout">
+                    <a class="nav-link" href="?c=User&a=logout">
                         <i class="fa fa-sign-out-alt"></i></a>
                 </li>
             </ul>

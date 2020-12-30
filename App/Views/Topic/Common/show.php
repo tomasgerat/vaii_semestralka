@@ -13,6 +13,8 @@ $category = isset($data["category"]) ? $data["category"] : "";
 $topicId = isset($data["topic_id"]) ? "&id=".$data["topic_id"] : "";
 ?>
 
+<script src="forum/public/js/addTopic.js" type="module"></script>
+
 <div class="container mt-5 mb-3">
     <div class="row">
         <?php echo Tools::getErrorDiv("unknown", $errors) ?>
@@ -34,23 +36,6 @@ $topicId = isset($data["topic_id"]) ? "&id=".$data["topic_id"] : "";
                 <label for="text">Topic text:</label>
                 <textarea id="text" name="text" required><?=$text?></textarea>
                 <?php echo Tools::getErrorDiv("text", $errors) ?>
-                <!--TODO premiestnit script -->
-                <script type="text/javascript">
-                    //resize CKEditor with customised height and width
-
-                    CKEDITOR.replace('text',{
-                            toolbar :
-                                [
-                                    ['Bold','Italic','Underline','Strike', 'Subscript','Superscript'],
-                                    ['Undo','Redo'],
-                                    ['Link'],
-                                    ['Format']
-                                ],
-                            width: "100%",
-                            height: "200px"
-                        }
-                    );
-                </script>
             </div>
             <div class="dropdown mb-3 ml-0">
                 <select name="category" id="category" class="btn-block btn-dark select_item" required>

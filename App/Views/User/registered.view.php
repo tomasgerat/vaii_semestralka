@@ -10,7 +10,7 @@ include "common/header.php";
                 <h1>Welcome to FORUM</h1>
             </div>
         </div>
-        <img src="forum/public/img/greencheck.png">
+        <img src="forum/public/img/greencheck.png" alt="success">
         <div class="col-sm-12 instructions">
             <h3>
                 Registration completed successfully

@@ -89,7 +89,7 @@ $category = isset($data["category"]) ? $data["category"] : -1;
     <div class="row">
         <div class="d-none d-sm-block col-lg-8 col-md-8" id="top_navigation">
             <div class="navigation">
-                <?php if ($topics_count > 0) echo Tools::getPaggination(ceil($topics_count / 10.0), $currentPage, $url) ?>
+                <?php if ($topics_count > 0) echo Tools::getPaggination(ceil($topics_count / 10.0), $currentPage, $url, "current_page_top") ?>
             </div>
         </div>
     </div>
@@ -142,7 +142,7 @@ $category = isset($data["category"]) ? $data["category"] : -1;
                                             <?= $topic->title?>
                                         </a>
                                     </h3>
-                                    <p>
+                                    <div>
                                         <?php
 
 
@@ -159,7 +159,7 @@ $category = isset($data["category"]) ? $data["category"] : -1;
                                         <?= $topicText ?>
                                         <!--<? //= (strlen($topicText) > 300 ? (substr($topicText, 0, 300) . "...") : $topicText) ?> -->
                                         <!-- <? //= (strlen($topic->text) > 300 ? (substr_close_tags($topic->text, 0, 600)) : $topic->text)?> -->
-                                    </p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -213,7 +213,7 @@ $category = isset($data["category"]) ? $data["category"] : -1;
     <div class="row">
         <div class="col-lg-8 col-md-8" id="bottom_navigation">
             <div class="navigation">
-                <?php if ($topics_count > 0) echo \App\Models\Tools::getPaggination(ceil($topics_count / 10.0), $currentPage, $url) ?>
+                <?php if ($topics_count > 0) echo \App\Models\Tools::getPaggination(ceil($topics_count / 10.0), $currentPage, $url, "current_page_bottom") ?>
             </div>
         </div>
     </div>
