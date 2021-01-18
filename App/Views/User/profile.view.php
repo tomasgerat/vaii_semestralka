@@ -10,7 +10,7 @@ $last_name = isset($data["last_name"]) ? $data["last_name"] : "";
 $e_mail = isset($data["e_mail"]) ? $data["e_mail"] : "";
 $login = isset($data["login"]) ? $data["login"] : "";
 $full_name = $first_name . ' ' . $last_name;
-if (empty($full_name))
+if (empty($first_name) && empty($last_name))
     $full_name = $login;
 $errors = isset($data["errors"]) ? $data["errors"] : [];
 
