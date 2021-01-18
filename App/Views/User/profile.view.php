@@ -64,7 +64,7 @@ $errors = isset($data["errors"]) ? $data["errors"] : [];
                     <?php echo Tools::getErrorDiv("first_name", $errors) ?>
                     <div class="row mb-3">
                         <div class="col-md-4">
-                            <label for="last_name">First name</label>
+                            <label for="last_name">Last name</label>
                         </div>
                         <div class="col-md-8">
                             <input type="text" class="form-control" id="last_name" name="last_name"

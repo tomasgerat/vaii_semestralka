@@ -233,8 +233,16 @@ class UserController extends AControllerBase
             $errors["first_name"] = "First name can not contains special chars.";
         }
 
+        if (strlen($first_name) > 100) {
+            $errors["first_name"] = "Max first name length is 100.";
+        }
+
         if (strlen($last_name) > 0 && preg_match('/[\'^£$%&*()}{@#~?><,|=_+¬-]/', $last_name)) {
             $errors["last_name"] = "Last name can not contains special chars.";
+        }
+
+        if (strlen($last_name) > 100) {
+            $errors["last_name"] = "Max last name length is 100.";
         }
 
         return $errors;
